@@ -7,6 +7,7 @@ body,html{
     width: 100%;
     background: rgb(138, 78, 173);
 }
+
 .menu {
     display: flex;
     justify-content: center;
@@ -40,4 +41,11 @@ label.fornecedor:hover{
 
 button{
     width: 100%;
+}
+
+.erroLogin{
+    background-color: rgb(0, 0, 0);
+    text-align: center;
+    color: #FFF;
+    height: 25px;
 }

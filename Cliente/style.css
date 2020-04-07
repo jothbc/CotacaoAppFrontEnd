@@ -1,0 +1,33 @@
+*{
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+}
+
+body,html{
+    width: 100%;
+}
+body{
+    background: rgb(71, 218, 27);
+}
+
+.navbar-dark .navbar-nav .nav-link:hover{
+    color: rgb(71, 218, 27);
+}
+
+.box-container{
+    /* border: 1px solid red; */
+    height: 350px;
+    margin-top: 10%;
+    box-sizing: border-box;
+    box-shadow: 0px 0px 100px 0px rgba(0, 0, 0, 0.5);
+    border-radius: 10px;
+    background: #343a40;
+    /* display: flex; */
+    /* justify-content: space-between; */
+    padding: 2em;
+}
+.form-inline input{
+    border: 1px solid red;
+    display: block;
+}

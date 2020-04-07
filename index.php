@@ -9,12 +9,17 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
-    <title>Supermercado Correia - Login</title>
+    <title>Cotações - Login</title>
 
 </head>
 
 <body>
 
+    <? if(isset($_GET['erro']) && $_GET['erro']== 'login'){?>
+        <div class="erroLogin">
+            Primeiro você deve realizar o login.
+        </div>
+    <?}?>
     <div class="container menu">
         <div class="row bloco">
             <div class="col mr-5">
@@ -30,6 +35,9 @@
                             <button class="btn btn-dark mt-2">Logar</button>
                         </form>
                         <a href="" class="inscricao text-info">Inscrever-se</a>
+                        <?if(isset($_GET['erro']) && $_GET['erro']=='cliente'){?>
+                            <span class="inscricao text-danger ml-5">Usuário e/ou Senha incorretos.</span>
+                        <?}?>
                     </div>
                 </div>
             </div>
@@ -46,6 +54,9 @@
                             <button class="btn btn-dark mt-2">Logar</button>
                         </form>
                         <a href="" class="inscricao text-info">Inscrever-se</a>
+                        <?if(isset($_GET['erro']) && $_GET['erro']=='fornecedor'){?>
+                            <span class="inscricao text-danger ml-5">Usuário e/ou Senha incorretos.</span>
+                        <?}?>
                     </div>
                 </div>
             </div>
