@@ -5,6 +5,13 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
     session_destroy();
     header("Location: ../index.php?erro=login");
 }
+if(isset($_GET['pedido'])){
+    $_SESSION['pedido'] = $_GET['pedido'];
+}
+
+require_once "../../../app_cotacao/Conexao/JDBC.php";
+require_once "../../../app_cotacao/Produto/Produto.model.php";
+require_once "../../../app_cotacao/Produto/Produto.Service.php";
 
 ?>
 
@@ -19,9 +26,13 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
     <link rel="stylesheet" href="../fontawesome/css/all.min.css">
 
     <link rel="stylesheet" href="./style.css">
-    <title><?= $_SESSION['company_name']?></title>
-    
+    <title><?= $_SESSION['company_name'] ?></title>
 
+    <script>
+        function inserirItem(item_id,pedido){
+            window.location.href = "adicionar_item_cotacao.php?item_id="+item_id+"&pedido="+pedido
+        }
+    </script>
 </head>
 
 <body>
@@ -36,9 +47,66 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
         </ul>
     </nav>
     <section class="container">
-        <div class="box-container">
+        <div class="box-container div-lateral">
 
-            <!-- CONTEUDO DA DIV -->
+            <div class="lateral-esq">
+                <form action="./cotacao.php" method="POST">
+                    <div class="input-group">
+                        <input type="text" placeholder="Descrição" class="form-control" name="descricao">
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-success"><i class="fas fa-search"></i></button>
+                        </div>
+                    </div>
+                </form>
+                <table class="table table-dark">
+                    <tbody>
+                        <?
+                        if (isset($_POST['descricao'])) {
+                            $produto = new Produto();
+                            $produto->__set('descricao', $_POST['descricao']);
+
+                            $service = new ProdutoService($produto, new Conexao());
+                            $lista = $service->read('descricao');
+
+                            foreach ($lista as $key => $item) { ?>
+                                <tr>
+                                    <td> <?= $item['descricao'] ?></td>
+                                    <td onclick="inserirItem(<?=$item['id']?>,<?=$_SESSION['pedido']?>)"><i class="fas fa-arrow-right"></i></td>
+                                </tr>
+                            <? }
+
+                            //Se for uma string maior que 5 caracteres
+                            if (strlen($_POST['descricao']) > 5) { ?>
+                                <tr>
+                                    <td><?=$_POST['descricao']?></td>
+                                    <td><i class="fas fa-plus"></i></i></td>
+                                </tr>
+                        <?  }
+                        }
+                        ?>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="lateral-dir">
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <td>
+                                Descrição
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- vou ter que pré-carregar a lista vinda da $_SESSION['pedido'] -->
+                        <tr>
+                            <td>Amaciante downy 500ml</td>
+                            <td> <i class="fas fa-trash-alt"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </section>
 

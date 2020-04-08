@@ -17,17 +17,42 @@ body{
 
 .box-container{
     /* border: 1px solid red; */
-    height: 350px;
+    min-height: 350px;
     margin-top: 10%;
     box-sizing: border-box;
     box-shadow: 0px 0px 100px 0px rgba(0, 0, 0, 0.5);
     border-radius: 10px;
     background: #343a40;
-    /* display: flex; */
-    /* justify-content: space-between; */
     padding: 2em;
+}
+.div-lateral{
+    display: flex;
+    justify-content: space-between;
 }
 .form-inline input{
     border: 1px solid red;
     display: block;
+}
+
+tr.data-table:hover{
+    color: rgb(71, 218, 27);
+    cursor: pointer;
+}
+.text-danger.delete-error{
+    border: 1px solid rgb(172, 55, 8);
+    border-radius: 5px;
+}
+.text-success.delete-error{
+    border: 1px solid rgb(71, 218, 27);
+    border-radius: 5px;
+}
+.lateral-esq{
+    width: 49%;
+    background: rgba(92, 89, 89, 0.295);
+    border-radius: 5px;
+}
+.lateral-dir{
+    width: 49%;
+    background: rgba(92, 89, 89, 0.295);
+    border-radius: 5px;
 }
