@@ -30,7 +30,14 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
 
     <script>
         function inserirItem(item_id,pedido){
-            window.location.href = "adicionar_item_cotacao.php?item_id="+item_id+"&pedido="+pedido
+            window.location.href = "./adicionar_item_cotacao.php?item_id="+item_id+"&pedido="+pedido
+        }
+        function removerItemDaCotacao(id_item_cotacao){
+            window.location.href = "./remover_item_cotacao.php?id_item_cotacao="+id_item_cotacao
+        }
+        function novoItem(descricao,pedido){
+            console.log(descricao,pedido)
+            window.location.href = "./adicionar_item_cotacao.php?novo="+descricao+"&pedido="+pedido
         }
     </script>
 </head>
@@ -47,9 +54,11 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
         </ul>
     </nav>
     <section class="container">
-        <div class="box-container div-lateral">
-
-            <div class="lateral-esq">
+        <!-- <div class="box-container div-lateral"> -->
+        <div class="row mt-5">
+            <!-- <div class="lateral-esq"> -->
+            <div class="col-md-3 box">
+                <span class="box-pedido">PEDIDO: <?=$_SESSION['pedido']?></span>
                 <form action="./cotacao.php" method="POST">
                     <div class="input-group">
                         <input type="text" placeholder="Descrição" class="form-control" name="descricao">
@@ -79,7 +88,7 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
                             if (strlen($_POST['descricao']) > 5) { ?>
                                 <tr>
                                     <td><?=$_POST['descricao']?></td>
-                                    <td><i class="fas fa-plus"></i></i></td>
+                                    <td onclick="novoItem('<?=$_POST['descricao']?>',<?=$_SESSION['pedido']?>)"><i class="fas fa-plus"></i></i></td>
                                 </tr>
                         <?  }
                         }
@@ -89,7 +98,8 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
                 </table>
             </div>
 
-            <div class="lateral-dir">
+            <!-- <div class="lateral-dir"> -->
+            <div class="col-md-9 box">
                 <table class="table table-dark">
                     <thead>
                         <tr>
@@ -100,10 +110,26 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
                     </thead>
                     <tbody>
                         <!-- vou ter que pré-carregar a lista vinda da $_SESSION['pedido'] -->
-                        <tr>
-                            <td>Amaciante downy 500ml</td>
-                            <td> <i class="fas fa-trash-alt"></i></td>
-                        </tr>
+                        <!-- TEMPORARIO -->
+                        <?
+                            require_once '../../../app_cotacao/Produto/ProdutoPedido.php';
+                            require_once '../../../app_cotacao/Produto/ProdutoPedido.Service.php';
+                            $pedido = new ProdutoPedido();
+                            $pedido->__set('cliente_id',$_SESSION['id']);
+                            $pedido->__set('pedido_id',$_SESSION['pedido']);
+
+                            $service = new ProdutoPedidoService($pedido, new Conexao());
+                            $lista = $service->readAll();
+
+                            foreach($lista as $key => $item){ ?>
+
+                                <tr>
+                                    <td><?=$item['descricao']?></td>
+                                    <td onclick="removerItemDaCotacao(<?=$item['id']?>)"> <i class="fas fa-trash-alt"></i></td>
+                                </tr>
+
+                            <?}
+                        ?>
                     </tbody>
                 </table>
             </div>
