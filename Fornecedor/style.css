@@ -33,28 +33,3 @@ tr.data-table:hover{
     color: rgb(71, 218, 27);
     cursor: pointer;
 }
-.text-danger.delete-error{
-    border: 1px solid rgb(172, 55, 8);
-    border-radius: 5px;
-}
-.text-success.delete-error{
-    border: 1px solid rgb(71, 218, 27);
-    border-radius: 5px;
-}
-
-/* pagina de cotação */
-
-.box{
-    /* width: 20%; */
-    background: #343a40;
-    border-radius: 5px;
-    padding: 3px;
-    margin-top: 5px;
-}
-.box-pedido{
-    border: 1px solid white;
-    border-radius: 5px;
-    color: white;
-    padding: 0px 2px;
-}
-

@@ -5,13 +5,26 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
     session_destroy();
     header("Location: ../index.php?erro=login");
 }
-if(isset($_GET['pedido'])){
+if (isset($_GET['pedido'])) {
     $_SESSION['pedido'] = $_GET['pedido'];
 }
 
 require_once "../../../app_cotacao/Conexao/JDBC.php";
 require_once "../../../app_cotacao/Produto/Produto.model.php";
 require_once "../../../app_cotacao/Produto/Produto.Service.php";
+require_once '../../../app_cotacao/Produto/ProdutoPedido.php';
+require_once '../../../app_cotacao/Produto/ProdutoPedido.Service.php';
+require_once "../../../app_cotacao/Cliente/CotacaoClienteInfo.model.php";
+require_once "../../../app_cotacao/Cliente/CotacaoClienteInfo.Service.php";
+
+$cotacao = new CotacaoClienteInfo();
+$cotacao->__set('cliente_id',$_SESSION['id']);
+$cotacao->__set('pedido',$_SESSION['pedido']);
+
+$sericeCotacao = new CotacaoClienteInfoService($cotacao,new Conexao());
+$info_cotacao = $sericeCotacao->read();
+
+$status_inverso = $info_cotacao['status']==0?'Aberto':'Fechado';
 
 ?>
 
@@ -29,15 +42,19 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
     <title><?= $_SESSION['company_name'] ?></title>
 
     <script>
-        function inserirItem(item_id,pedido){
-            window.location.href = "./adicionar_item_cotacao.php?item_id="+item_id+"&pedido="+pedido
+        function inserirItem(item_id, pedido) {
+            window.location.href = "./adicionar_item_cotacao.php?item_id=" + item_id + "&pedido=" + pedido
         }
-        function removerItemDaCotacao(id_item_cotacao){
-            window.location.href = "./remover_item_cotacao.php?id_item_cotacao="+id_item_cotacao
+
+        function removerItemDaCotacao(id_item_cotacao) {
+            window.location.href = "./remover_item_cotacao.php?id_item_cotacao=" + id_item_cotacao
         }
-        function novoItem(descricao,pedido){
-            console.log(descricao,pedido)
-            window.location.href = "./adicionar_item_cotacao.php?novo="+descricao+"&pedido="+pedido
+
+        function novoItem(descricao, pedido) {
+            window.location.href = "./adicionar_item_cotacao.php?novo=" + descricao + "&pedido=" + pedido
+        }
+        function inverterStatus(cliente_id,pedido){
+            window.location.href = "./alterar_status_pedido.php?cliente_id=" +cliente_id + "&pedido=" + pedido
         }
     </script>
 </head>
@@ -58,7 +75,7 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
         <div class="row mt-5">
             <!-- <div class="lateral-esq"> -->
             <div class="col-md-3 box">
-                <span class="box-pedido">PEDIDO: <?=$_SESSION['pedido']?></span>
+                <span class="box-pedido">PEDIDO: <?= $_SESSION['pedido'].' '.$info_cotacao['descricao'] ?></span>
                 <form action="./cotacao.php" method="POST">
                     <div class="input-group">
                         <input type="text" placeholder="Descrição" class="form-control" name="descricao">
@@ -78,17 +95,17 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
                             $lista = $service->read('descricao');
 
                             foreach ($lista as $key => $item) { ?>
-                                <tr>
+                                <tr class="data-table">
                                     <td> <?= $item['descricao'] ?></td>
-                                    <td onclick="inserirItem(<?=$item['id']?>,<?=$_SESSION['pedido']?>)"><i class="fas fa-arrow-right"></i></td>
+                                    <td onclick="inserirItem(<?= $item['id'] ?>,<?= $_SESSION['pedido'] ?>)"><i class="fas fa-arrow-right"></i></td>
                                 </tr>
                             <? }
 
                             //Se for uma string maior que 5 caracteres
                             if (strlen($_POST['descricao']) > 5) { ?>
-                                <tr>
-                                    <td><?=$_POST['descricao']?></td>
-                                    <td onclick="novoItem('<?=$_POST['descricao']?>',<?=$_SESSION['pedido']?>)"><i class="fas fa-plus"></i></i></td>
+                                <tr class="data-table">
+                                    <td><?= $_POST['descricao'] ?></td>
+                                    <td onclick="novoItem('<?= $_POST['descricao'] ?>',<?= $_SESSION['pedido'] ?>)"><i class="fas fa-plus"></i></i></td>
                                 </tr>
                         <?  }
                         }
@@ -112,26 +129,31 @@ require_once "../../../app_cotacao/Produto/Produto.Service.php";
                         <!-- vou ter que pré-carregar a lista vinda da $_SESSION['pedido'] -->
                         <!-- TEMPORARIO -->
                         <?
-                            require_once '../../../app_cotacao/Produto/ProdutoPedido.php';
-                            require_once '../../../app_cotacao/Produto/ProdutoPedido.Service.php';
-                            $pedido = new ProdutoPedido();
-                            $pedido->__set('cliente_id',$_SESSION['id']);
-                            $pedido->__set('pedido_id',$_SESSION['pedido']);
+                        
+                        $pedido = new ProdutoPedido();
+                        $pedido->__set('cliente_id', $_SESSION['id']);
+                        $pedido->__set('pedido_id', $_SESSION['pedido']);
 
-                            $service = new ProdutoPedidoService($pedido, new Conexao());
-                            $lista = $service->readAll();
+                        $service = new ProdutoPedidoService($pedido, new Conexao());
+                        $lista = $service->readAll();
 
-                            foreach($lista as $key => $item){ ?>
+                        foreach ($lista as $key => $item) { ?>
 
-                                <tr>
-                                    <td><?=$item['descricao']?></td>
-                                    <td onclick="removerItemDaCotacao(<?=$item['id']?>)"> <i class="fas fa-trash-alt"></i></td>
-                                </tr>
+                            <tr class="data-table">
+                                <td><?= $item['descricao'] ?></td>
+                                <td onclick="removerItemDaCotacao(<?= $item['id'] ?>)"> <i class="fas fa-trash-alt"></i></td>
+                            </tr>
 
-                            <?}
+                        <? }
                         ?>
                     </tbody>
                 </table>
+            </div>
+            <div class="col-md-12 box text-white d-flex justify-content-end pr-5">
+                <div>
+                    <span>Alterar status do pedido para </span>
+                    <button class="btn btn-outline-light" onclick="inverterStatus(<?=$_SESSION['id']?>,<?=$_SESSION['pedido']?>)"> <?= $status_inverso ?> </button>
+                </div>
             </div>
         </div>
     </section>

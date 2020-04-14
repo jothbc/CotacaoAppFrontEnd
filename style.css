@@ -8,20 +8,15 @@ body,html{
     background: rgb(138, 78, 173);
 }
 
-.menu {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* align-self: center; */
-    /* border: 1px solid red; */
+.menu,
+.menu-interno {
     height: 100%;
     width: 100%;
-    box-sizing: border-box;
+    
 }
-
-.bloco {
-    width: 900px;
-    height: 250px;
+.menu-interno{
+    justify-content: space-between;
+    align-items: center;
 }
 .card{
     box-shadow: 0px 0px 100px 0px rgba(0, 0, 0, 0.5);
@@ -48,4 +43,19 @@ button{
     text-align: center;
     color: #FFF;
     height: 25px;
+}
+.cadastro-success{
+    background-color: rgb(0, 0, 0);
+    text-align: center;
+    color: rgb(30, 206, 30);
+    height: 25px;
+}
+.cadastro-fail{
+    background-color: rgb(0, 0, 0);
+    text-align: center;
+    color: rgb(206, 30, 30);
+    height: 25px;
+}
+a:hover{
+    cursor: pointer;
 }
