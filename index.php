@@ -39,9 +39,9 @@
         </div>
     <? } ?>
 
-    <div class="container menu">
+    <div class="container menu" >
         <div class="row menu-interno">
-            <div class="col-md-5 mt-5">
+            <div class="col-md-5 col-sm-12 mt-5" >
                 <div class="card">
                     <div class="card-header align-self-center">
                         <label for="email" class="cliente">Área do Cliente</label>
@@ -60,7 +60,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-5 mt-5">
+            <div class="col-md-5 col-sm-12 mt-5">
                 <div class="card">
                     <div class="card-header align-self-center">
                         <label for="emailfornecedor" class="fornecedor">Área do Fornecedor</label>

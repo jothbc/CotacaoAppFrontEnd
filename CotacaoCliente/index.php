@@ -13,11 +13,13 @@ if (isset($_GET['pedido'])) {
 require_once "../../../app_cotacao/Cliente/Lista/Lista.php";
 require_once "../../../app_cotacao/Cliente/Lista/Lista.Service.php";
 require_once "../../../app_cotacao/Conexao/JDBC.php";
+
 $lista = new Lista();
 $lista->__set('cliente_id', $_SESSION['id'])
     ->__set('pedido_id', $_SESSION['pedido']);
 
 $lista_service = new ListaService($lista, new Conexao());
+$status_pedido = $lista_service->getStatusPedido();
 $lista_cliente = $lista_service->getListCliente();
 $lista_fornecedores = $lista_service->getListFornecedores();
 
@@ -76,8 +78,45 @@ foreach ($lista_cliente as $key => $item) {
     <title><?= $_SESSION['company_name'] ?> - Cliente</title>
 
     <script>
-        function marcar(produto_id,fornecedor_id){
-            console.log(produto_id,fornecedor_id)
+        function marcar(produto_id, fornecedor_id, cliente_id, pedido_id) {
+            $.ajax({
+                type: 'post',
+                url: 'marcar_desmarcar_item.php',
+                data: {
+                    produto_id,
+                    fornecedor_id,
+                    cliente_id,
+                    pedido_id
+                },
+                success: data => {
+                    let date = $('#'+produto_id+'_'+fornecedor_id+ ' i')
+                    if(date.length==1){
+                        $('#'+produto_id+'_'+fornecedor_id+ ' i').remove();
+                    }else{
+                        $('#'+produto_id+'_'+fornecedor_id).append('<i class="far fa-check-square"></i>')
+                    }
+                },
+                error: erro => {
+                    console.log(erro)
+                }
+            })
+
+        }
+        function fechar_abrir_pedido(cliente_id,pedido_id){
+            $.ajax({
+                type: 'post',
+                url: 'fechar_abrir_pedido.php',
+                data: {
+                    cliente_id,
+                    pedido_id
+                },
+                success: data => {
+                    window.location.reload()
+                },
+                error: erro => {
+                   console.log(erro)
+                }
+            })
         }
     </script>
 
@@ -97,70 +136,102 @@ foreach ($lista_cliente as $key => $item) {
     <section class="container">
         <div class="row">
             <div class="col-md-12 box-container">
+                <div>
+                    <h3 class="text-white">
+                        <?=$_SESSION['company_name']?>  
+                    </h3>
+                    <h5 class="text-info">
+                        Pedido <?=$_SESSION['pedido']?>
+                    </h5>
+                </div>
                 <table class="table table-dark">
                     <thead>
                         <tr>
                             <td>Descrição</td>
-                           <?
-                                //percorre todos os items
-                                foreach($lista_cliente as $key=>$item){
-                                    //percorre todos os fornecedores do item em questao
-                                    foreach($item['fornecedores'] as $k=>$i){
-                                        //verifica se é um fornecedor novo, se for é incluido o id desse fornecedor no array e é criado a coluna
-                                        if( !array_search($i['fornecedor_id'],$colunas_fornecedores_id) ){
-                                            array_push($colunas_fornecedores_id,$i['fornecedor_id']);
-                                            ?>
-                                                <td id="coluna_fornecedor_id_<?=$i['fornecedor_id']?>">
-                                                    <?=$i['company_name']?>
-                                                </td>
-                                            <?
-                                        }
+                            <?
+                            //percorre todos os items
+                            foreach ($lista_cliente as $key => $item) {
+                                //percorre todos os fornecedores do item em questao
+                                foreach ($item['fornecedores'] as $k => $i) {
+
+                                    //verifica se é um fornecedor novo, se for é incluido o id desse fornecedor no array e é criado a coluna
+                                    //metodo array_search nao funcionou aqui
+                                    if (!in_array($i['fornecedor_id'], $colunas_fornecedores_id)) {
+                                        array_push($colunas_fornecedores_id, $i['fornecedor_id']);
+
+                            ?>
+
+                                        <td id="coluna_fornecedor_id_<?= $i['fornecedor_id'] ?>">
+                                            <?= $i['company_name'] ?>
+                                        </td>
+
+                            <?
                                     }
                                 }
-                           ?>
+                            }
+                            ?>
                         </tr>
                     </thead>
 
                     <tbody>
-                        <?  
-                            //percorrendo item por item
-                            foreach($lista_cliente as $key=>$item){
-                                ?>
-                                    <tr class="data-table">
-                                        <td><?=$item['descricao']?> ID <?=$item['produto_id']?></td>
-                                        <?
-                                            //percorrendo os fornecedores que cotaram o item em questao
-                                            foreach($item['fornecedores'] as $k=>$forn){
-
-                                                //percorre todas as colunas pelo id do fornecedor
-                                                foreach($colunas_fornecedores_id as $index=>$forn_){
-                                                    
-                                                    //se o id da coluna for o mesmo que o fornecedor em questao aplica o preço
-                                                    if($forn_ == $forn['fornecedor_id']){
-                                                        ?>
-                                                            <td onclick="marcar(<?=$forn['produto_id']?>,<?=$forn['fornecedor_id']?>)">
-                                                                <?=$forn['valor']?>
-                                                            </td>
-                                                        <?
-                                                    }
-
-                                                }
-                                            }
-                                        ?>
-                                    </tr>
+                        <?
+                        //percorrendo item por item
+                        foreach ($lista_cliente as $key => $item) {
+                        ?>
+                            <tr class="data-table">
+                                <td><?= $item['descricao'] ?></td>
                                 <?
-                            }
+                                //percorre todas as colunas pelo id do fornecedor
+                                foreach ($colunas_fornecedores_id as $forn_) {
+
+                                    //variavél para verificar se essa coluna foi criado o td
+                                    //caso nao tenha sido criado, é criado no if la em baixo
+                                    $include = false;
+                                    //percorrendo os fornecedores que cotaram o item em questao
+                                    foreach ($item['fornecedores'] as $forn) {
+
+                                        //se o id da coluna for o mesmo que o fornecedor em questao aplica o preço
+                                        if ($forn_ == $forn['fornecedor_id']) {
+                                            $include = true;
+                                ?>
+                                            <td onclick="marcar(<?= $forn['produto_id'] ?>,<?= $forn['fornecedor_id'] ?>,<?= $_SESSION['id'] ?>,<?= $_SESSION['pedido'] ?>)" id="<?= $forn['produto_id'] ?>_<?= $forn['fornecedor_id'] ?>">
+
+                                                R$ <?= number_format($forn['valor'], 2, ',', '.') ?>
+                                                <? if ($forn['aprovado']) { ?>
+                                                    <i class="far fa-check-square"></i>
+                                                <? } ?>
+                                            </td>
+                                        <?
+                                        }
+                                    }
+                                    if (!$include) {
+                                        ?>
+                                        <td>
+                                        <i class="fas fa-times"></i>
+                                        </td>
+                                <?
+                                    }
+                                }
+                                ?>
+                            </tr>
+                        <?
+                        }
                         ?>
 
                     </tbody>
                 </table>
+                <div>
+                    <button class="btn btn-outline-info btn-block mt-4" onclick="fechar_abrir_pedido(<?=$_SESSION['id']?> , <?=$_SESSION['pedido']?> )">
+                        <?= $status_pedido['status']==1 ? 'Fechar Pedido':'Reabrir Pedido' ?>
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
 
     <!-- Scripts Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 

@@ -59,3 +59,8 @@ tr.data-table:hover{
     padding: 0px 2px;
 }
 
+.item-fornecedor-selected{
+    border-radius: 3px;
+    background: white;
+}
+
