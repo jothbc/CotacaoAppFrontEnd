@@ -18,13 +18,13 @@ require_once "../../../app_cotacao/Cliente/CotacaoClienteInfo.model.php";
 require_once "../../../app_cotacao/Cliente/CotacaoClienteInfo.Service.php";
 
 $cotacao = new CotacaoClienteInfo();
-$cotacao->__set('cliente_id',$_SESSION['id']);
-$cotacao->__set('pedido',$_SESSION['pedido']);
+$cotacao->__set('cliente_id', $_SESSION['id']);
+$cotacao->__set('pedido', $_SESSION['pedido']);
 
-$sericeCotacao = new CotacaoClienteInfoService($cotacao,new Conexao());
-$info_cotacao = $sericeCotacao->read();
+$service_cotacao = new CotacaoClienteInfoService($cotacao, new Conexao());
+// $info_cotacao = $service_cotacao->read();
 
-$status_inverso = $info_cotacao['status']==0?'Aberto':'Fechado';
+$status_inverso = $service_cotacao->getStatus()['status'] == 0 ? 'Aberto': 'Fechado';
 
 ?>
 
@@ -40,77 +40,47 @@ $status_inverso = $info_cotacao['status']==0?'Aberto':'Fechado';
 
     <link rel="stylesheet" href="./style.css">
     <title><?= $_SESSION['company_name'] ?></title>
-
-    <script>
-        function inserirItem(item_id, pedido) {
-            window.location.href = "./adicionar_item_cotacao.php?item_id=" + item_id + "&pedido=" + pedido
-        }
-
-        function removerItemDaCotacao(id_item_cotacao) {
-            window.location.href = "./remover_item_cotacao.php?id_item_cotacao=" + id_item_cotacao
-        }
-
-        function novoItem(descricao, pedido) {
-            window.location.href = "./adicionar_item_cotacao.php?novo=" + descricao + "&pedido=" + pedido
-        }
-        function inverterStatus(cliente_id,pedido){
-            window.location.href = "./alterar_status_pedido.php?cliente_id=" +cliente_id + "&pedido=" + pedido
-        }
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="script.js"></script>
 </head>
 
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="./index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
-            </li>
-            <li class="nav-item">
-                <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
-            </li>
-        </ul>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
+          <i class="fas fa-bars text-white"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="nav-principal">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="./index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
+                </li>
+            </ul>
+        </div>
     </nav>
+
+    <!-- Conteudo -->
     <section class="container">
         <!-- <div class="box-container div-lateral"> -->
         <div class="row mt-5">
             <!-- <div class="lateral-esq"> -->
             <div class="col-md-3 box">
-                <span class="box-pedido">PEDIDO: <?= $_SESSION['pedido'].' '.$info_cotacao['descricao'] ?></span>
-                <form action="./cotacao.php" method="POST">
-                    <div class="input-group">
-                        <input type="text" placeholder="Descrição" class="form-control" name="descricao">
-                        <div class="input-group-append">
-                            <button type="submit" class="btn btn-success"><i class="fas fa-search"></i></button>
-                        </div>
+
+                <span class="box-pedido d-block mb-1">PEDIDO: <?= $_SESSION['pedido'] ?></span>
+                
+                <div class="input-group">
+                    <input id="produto_descricao" type="text" placeholder="Descrição" class="form-control" name="descricao">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" onclick="buscarProduto()"><i class="fas fa-search"></i></button>
                     </div>
-                </form>
+                </div>
+
                 <table class="table table-dark">
-                    <tbody>
-                        <?
-                        if (isset($_POST['descricao'])) {
-                            $produto = new Produto();
-                            $produto->__set('descricao', $_POST['descricao']);
-
-                            $service = new ProdutoService($produto, new Conexao());
-                            $lista = $service->read('descricao');
-
-                            foreach ($lista as $key => $item) { ?>
-                                <tr class="data-table">
-                                    <td> <?= $item['descricao'] ?></td>
-                                    <td onclick="inserirItem(<?= $item['id'] ?>,<?= $_SESSION['pedido'] ?>)"><i class="fas fa-arrow-right"></i></td>
-                                </tr>
-                            <? }
-
-                            //Se for uma string maior que 5 caracteres
-                            if (strlen($_POST['descricao']) > 5) { ?>
-                                <tr class="data-table">
-                                    <td><?= $_POST['descricao'] ?></td>
-                                    <td onclick="novoItem('<?= $_POST['descricao'] ?>',<?= $_SESSION['pedido'] ?>)"><i class="fas fa-plus"></i></i></td>
-                                </tr>
-                        <?  }
-                        }
-                        ?>
-
+                    <tbody id="table_result">
+                       <!-- conteudo do bloco de notas -->
+                        
                     </tbody>
                 </table>
             </div>
@@ -125,34 +95,17 @@ $status_inverso = $info_cotacao['status']==0?'Aberto':'Fechado';
                             </td>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="table_pedido">
                         <!-- vou ter que pré-carregar a lista vinda da $_SESSION['pedido'] -->
                         <!-- TEMPORARIO -->
-                        <?
-                        
-                        $pedido = new ProdutoPedido();
-                        $pedido->__set('cliente_id', $_SESSION['id']);
-                        $pedido->__set('pedido_id', $_SESSION['pedido']);
-
-                        $service = new ProdutoPedidoService($pedido, new Conexao());
-                        $lista = $service->readAll();
-
-                        foreach ($lista as $key => $item) { ?>
-
-                            <tr class="data-table">
-                                <td><?= $item['descricao'] ?></td>
-                                <td onclick="removerItemDaCotacao(<?= $item['id'] ?>)"> <i class="fas fa-trash-alt"></i></td>
-                            </tr>
-
-                        <? }
-                        ?>
+                       
                     </tbody>
                 </table>
             </div>
             <div class="col-md-12 box text-white d-flex justify-content-end pr-5">
                 <div>
                     <span>Alterar status do pedido para </span>
-                    <button class="btn btn-outline-light" onclick="inverterStatus(<?=$_SESSION['id']?>,<?=$_SESSION['pedido']?>)"> <?= $status_inverso ?> </button>
+                    <button class="btn btn-outline-light m-1" onclick="inverterStatus()" id="btn_status_pedido"> <?= $status_inverso ?> </button>
                 </div>
             </div>
         </div>
@@ -160,7 +113,7 @@ $status_inverso = $info_cotacao['status']==0?'Aberto':'Fechado';
 
 
     <!-- Scripts Bootstrap -->
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>

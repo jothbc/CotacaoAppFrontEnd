@@ -39,14 +39,19 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
 
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="./index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
-            </li>
-            <li class="nav-item">
-                <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
-            </li>
-        </ul>
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
+          <i class="fas fa-bars text-white"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="nav-principal">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="./index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
+                </li>
+            </ul>
+        </div>
     </nav>
     <section class="container">
         <div class="row">
