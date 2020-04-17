@@ -9,14 +9,12 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
     <link rel="stylesheet" href="style.css">
-    <title>Cotações - Login</title>
+    <title>App Cotações - Login</title>
     <script>
         function novoCadastro(tipo){
             window.location.href = './Login/cadastro.php?tipo='+tipo
         }
-
     </script>
-
 </head>
 
 <body>

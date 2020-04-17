@@ -10,9 +10,9 @@ $cnpj = $_POST['cnpj'];
 // print_r($_SESSION);
 
 
-require_once "../../../app_cotacao/Fornecedor/Lista/Lista.php";
-require_once "../../../app_cotacao/Fornecedor/Lista/Lista.Service.php";
-require_once "../../../app_cotacao/Conexao/JDBC.php";
+require_once "../../app_cotacao/Fornecedor/Lista/Lista.php";
+require_once "../../app_cotacao/Fornecedor/Lista/Lista.Service.php";
+require_once "../../app_cotacao/Conexao/JDBC.php";
 
 $lista_cliente = (new ListaService(new Lista(), new Conexao()))->readAllList($cnpj, $cotacao);
 $lista_ja_informado = (new ListaService(new Lista(),new Conexao()))->readAllInformado($cnpj,$cotacao,$_SESSION['id']);
@@ -32,31 +32,6 @@ if(!empty($lista_cliente)){
     }
 }
 
-// echo '<pre>';
-// print_r($lista_cliente);
-// echo '</pre>';
-
-//LISTA JA INFORMADO
-// [0] => Array
-//         (
-//             [id] => 7
-//             [fornecedor_id] => 0
-//             [pedido_id] => 5
-//             [cliente_id] => 1
-//             [produto_id] => 1
-//             [valor] => 6
-//             [aprovado] => 0
-//         )
-
-//LISTA CLIENTE
-// [0] => Array
-// (
-//     [cliente_id] => 1
-//     [company_name] => Supermercado Correia
-//     [pedido_id] => 5
-//     [produto_id] => 10
-//     [descricao] => mais items do que cabe
-// )
 ?>
 
 <head>
@@ -66,63 +41,38 @@ if(!empty($lista_cliente)){
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
-
+    <!-- <link rel="stylesheet" href="../fontawesome/css/all.min.css"> -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="./style.css">
     <title><?= $_SESSION['company_name'] ?> - Fornecedor</title>
 
-    <script>
-        function voltar() {
-            window.location.href = "./index.php"
-        }
-
-        function removeItemDaVisualizacao(linha) {
-            $('#' + linha).remove()
-        }
-
-        function definirValores() {
-            let lista = []
-            $('#table-body tr input').each(function(index, element) {
-                if(element.value > 0){
-                    lista[index] = {
-                        id_prod:(element.id).substring(8),
-                        valor: element.value
-                    }
-                }
-            })
-            $.ajax({
-                type: 'post',
-                url: 'definir_valores.php',
-                data: {dado:lista},
-                // dataType: 'json',
-                success: data =>{
-                    // console.log(data)
-                    window.location.href = 'index.php?pedido=success'
-                },
-                error: erro=>{alert(erro)}                
-            })
-            
-
-        }
-    </script>
+    <script src="script.js"></script>
 
 </head>
 
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="./index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
-            </li>
-            <li class="nav-item">
-                <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
-            </li>
-        </ul>
+        <div class="navbar-brand">
+            <?=$_SESSION['company_name']?>
+        </div>    
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+        <div id="nav-principal" class="collapse navbar-collapse"> 
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="./index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
+                </li>
+            </ul>
+        </div>   
     </nav>
     <section class="container">
         <div class="row">
             <div class="col-md-12 box-container justify-content-center">
-                <!-- controle de lista_cliente$lista_cliente vazia ou inesistente -->
+                <!-- controle de $lista_cliente vazia ou inesistente -->
                 <? if (empty($lista_cliente)) { ?>
                     <button onclick="voltar()" type="button" class="btn btn-info"><i class="fas fa-arrow-left"></i> Voltar</button>
                     <h3 class="text-info" style="font-weight: 1">
@@ -164,10 +114,8 @@ if(!empty($lista_cliente)){
                         </tbody>
                     </table>
 
-
-
                 <? } else { ?>
-
+                    <!-- PEDIDO EM ABERTO -->
                     <h4 class="text-white"><?= $lista_cliente[0]['company_name'] ?></h4>
 
                     <table class="table table-dark" style="margin: 0px -10px;">
@@ -216,12 +164,7 @@ if(!empty($lista_cliente)){
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <!-- scripts jquery -->
-    <script>
-        $(document).ready(() => {
-
-        })
-    </script>
+    
 </body>
 
 </html>

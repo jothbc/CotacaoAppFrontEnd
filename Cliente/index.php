@@ -16,8 +16,9 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
-
+    <!-- <link rel="stylesheet" href="../fontawesome/css/all.min.css"> -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    
     <link rel="stylesheet" href="./style.css">
     <title><?= $_SESSION['company_name'] ?> - Cliente</title>
 
@@ -39,6 +40,9 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
 
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div class="navbar-brand">
+                <?=$_SESSION['company_name']?>
+        </div>
         <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
           <i class="fas fa-bars text-white"></i>
         </button>
@@ -80,9 +84,9 @@ if (!isset($_SESSION['authenticate']) && $_SESSION['authenticate'] != 'yes') {
                             </tr>
                         </thead>
                         <?
-                        require_once '../../../app_cotacao/Conexao/JDBC.php';
-                        require_once '../../../app_cotacao/Cliente/CotacaoClienteInfo.model.php';
-                        require_once '../../../app_cotacao/Cliente/CotacaoClienteInfo.Service.php';
+                        require_once '../../app_cotacao/Conexao/JDBC.php';
+                        require_once '../../app_cotacao/Cliente/CotacaoClienteInfo.model.php';
+                        require_once '../../app_cotacao/Cliente/CotacaoClienteInfo.Service.php';
                         $cotacao = new CotacaoClienteInfo();
                         $cotacao->__set('cliente_id', $_SESSION['id']);
 

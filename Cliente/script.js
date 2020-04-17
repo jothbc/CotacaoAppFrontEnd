@@ -49,7 +49,7 @@ function inserirItem(item_id) {
         data: {item_id},
         success: data=>{
            $('#table_pedido').append('<tr class="data-table" id="'+(data.id)+'"> <td>'+(data.descricao)+'</td> <td onclick="removerItemDaCotacao('+(data.id)+')"> <i class="fas fa-trash-alt"></i></td> </tr>')
-        //    $('#table_result').html('')
+           $('#table_result').html('')
         },
         error: erro=>{
            alert('ERRO: '+erro)
@@ -81,7 +81,7 @@ function novoItem(novo) {
         data: {novo},
         success: data=>{
            $('#table_pedido').append('<tr class="data-table" id="'+(data.id)+'"> <td>'+(data.descricao)+'</td> <td onclick="removerItemDaCotacao('+(data.id)+')"> <i class="fas fa-trash-alt"></i></td> </tr>')
-            $('#table_result').html('')
+           $('#table_result').html('')
         },
         error: erro=>{
            alert('ERRO: '+erro)

@@ -10,9 +10,9 @@ if (isset($_GET['pedido'])) {
     $_SESSION['pedido'] = $_GET['pedido'];
 }
 
-require_once "../../../app_cotacao/Cliente/Lista/Lista.php";
-require_once "../../../app_cotacao/Cliente/Lista/Lista.Service.php";
-require_once "../../../app_cotacao/Conexao/JDBC.php";
+require_once "../../app_cotacao/Cliente/Lista/Lista.php";
+require_once "../../app_cotacao/Cliente/Lista/Lista.Service.php";
+require_once "../../app_cotacao/Conexao/JDBC.php";
 
 $lista = new Lista();
 $lista->__set('cliente_id', $_SESSION['id'])
@@ -23,28 +23,6 @@ $status_pedido = $lista_service->getStatusPedido();
 $lista_cliente = $lista_service->getListCliente();
 $lista_fornecedores = $lista_service->getListFornecedores();
 
-// echo '<pre>';
-// print_r($lista_fornecedores);
-// echo '</pre>';
-// [0] => Array
-// (
-//     [id] => 30
-//     [cliente_id] => 1
-//     [pedido_id] => 5
-//     [produto_id] => 12
-//     [descricao] => Requeijão Tirol 200g
-// )
-
-// [0] => Array
-// (
-//     [id] => 21
-//     [fornecedor_id] => 2
-//     [pedido_id] => 5
-//     [cliente_id] => 1
-//     [produto_id] => 2
-//     [valor] => 20.79
-//     [aprovado] => 0
-// )
 $colunas = 0;
 $colunas_fornecedores_id = [];
 foreach ($lista_cliente as $key => $item) {
@@ -57,10 +35,6 @@ foreach ($lista_cliente as $key => $item) {
         }
     }
 }
-// echo '<pre>';
-// print_r($lista_cliente);
-// echo '</pre>';
-// echo $colunas;
 
 ?>
 
@@ -72,66 +46,33 @@ foreach ($lista_cliente as $key => $item) {
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <link rel="stylesheet" href="../fontawesome/css/all.min.css">
-
+    <!-- <link rel="stylesheet" href="../fontawesome/css/all.min.css"> -->
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <link rel="stylesheet" href="../Cliente/style.css">
     <title><?= $_SESSION['company_name'] ?> - Cliente</title>
 
-    <script>
-        function marcar(produto_id, fornecedor_id, cliente_id, pedido_id) {
-            $.ajax({
-                type: 'post',
-                url: 'marcar_desmarcar_item.php',
-                data: {
-                    produto_id,
-                    fornecedor_id,
-                    cliente_id,
-                    pedido_id
-                },
-                success: data => {
-                    let date = $('#'+produto_id+'_'+fornecedor_id+ ' i')
-                    if(date.length==1){
-                        $('#'+produto_id+'_'+fornecedor_id+ ' i').remove();
-                    }else{
-                        $('#'+produto_id+'_'+fornecedor_id).append('<i class="far fa-check-square"></i>')
-                    }
-                },
-                error: erro => {
-                    console.log(erro)
-                }
-            })
-
-        }
-        function fechar_abrir_pedido(cliente_id,pedido_id){
-            $.ajax({
-                type: 'post',
-                url: 'fechar_abrir_pedido.php',
-                data: {
-                    cliente_id,
-                    pedido_id
-                },
-                success: data => {
-                    window.location.reload()
-                },
-                error: erro => {
-                   console.log(erro)
-                }
-            })
-        }
-    </script>
+    <script src="script.js"></script>
 
 </head>
 
 <body>
     <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
-                <a href="../Cliente/index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
-            </li>
-            <li class="nav-item">
-                <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
-            </li>
-        </ul>
+        <div class="navbar-brand">
+            <?=$_SESSION['company_name']?>
+        </div>    
+        <button class="navbar-toggler" data-toggle="collapse" data-target="#nav-principal">
+            <i class="fas fa-bars text-white"></i>
+        </button>
+        <div id="nav-principal" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a href="../Cliente/index.php" class="nav-link"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="../logoff.php" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logoff</a>
+                </li>
+            </ul>
+        </div>
     </nav>
     <section class="container">
         <div class="row">
@@ -207,7 +148,7 @@ foreach ($lista_cliente as $key => $item) {
                                     if (!$include) {
                                         ?>
                                         <td>
-                                        <i class="fas fa-times"></i>
+                                            <i class="fas fa-times"></i>
                                         </td>
                                 <?
                                     }
@@ -235,12 +176,6 @@ foreach ($lista_cliente as $key => $item) {
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-    <!-- scripts jquery -->
-    <script>
-        // $(document).ready(
-
-        // )
-    </script>
 </body>
 
 </html>
