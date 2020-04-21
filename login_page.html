@@ -1,0 +1,40 @@
+<div class="opcao_form d-flex justify-content-center">
+    <div class="div-form align-self-center">
+        <div class="display-4" id="opcao_3">Cliente</div>
+        <form>
+            <input type="email" name="email" id="email" placeholder="Email" class="form-control">
+            <input type="password" name="senha" id="senha" placeholder="Senha" class="form-control mt-1">
+            <button class="btn btn-outline-info btn-block mt-1" id="btn-login">Login</button>
+            <span id="erro-login"  class="text-danger" hidden>*Email e ou senha incorretos</span>
+        </form>
+        <a onclick="inscreverse()">Inscrever-se</a>
+    </div>
+</div>
+<script>
+    $('#btn-login').on('click', e => {
+        e.preventDefault()
+        let opcao = $('#opcao_1').text().toLowerCase()
+        let email = $('#email').val()
+        let senha = $('#senha').val()
+        $.ajax({
+            type: 'post',
+            url: 'login.php',
+            data: ({
+                email,
+                senha,
+                opcao
+            }),
+            success: data => {
+                console.log(data)
+                if(data =='success'){
+                   //ir para a pagina principal do cliente
+                }else if(data == 'fail'){
+                    $('#erro-login').removeAttr('hidden')
+                }
+            },
+            error: erro => {
+                console.log(erro)
+            }
+        })
+    })
+</script>

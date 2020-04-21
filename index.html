@@ -9,106 +9,42 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+
     <script src="https://kit.fontawesome.com/170e4c5383.js" crossorigin="anonymous"></script>
 
-    <!-- <link rel="stylesheet" href="style.css"> -->
+    <!-- Scripts Jquery -->
+    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
+        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+
+
     <title>App Cotações - Login</title>
-    <style>
-        body,
-        html {
-            margin: 0;
-            padding: 0;
-            text-decoration: none;
-            height: 100%;
-            width: 100%;
-            background: #FFF;
-            overflow-x: hidden;
-        }
-        /* página em si */
-        #menu {
-            height: 100%;
-            width: 100%;
-        }
-        .meio {
-            height: 50%;
-            width: 100%;
-        }
-
-        /* definições de cada bloco */
-        .opcao_form,
-        .opcao_login{
-            width: 100%;
-            height: 100%;
-            padding: 5%;
-        }
-        .opcao_login {
-            background: black;
-            color: white;
-        }
-        .opcao_form{
-            background: white;
-            color: black;
-        }
-
-        /* Estilização do link */
-        .opcao_login a {
-            color: white;
-            text-decoration: none;
-        }
-        .opcao_login a:hover {
-            color: chartreuse;
-        }
-
-
-        /* estilização da logo */
-        #logo {
-            width: 85%;
-            margin-left: 5%;
-        }
-        .row-logo {
-            height: 80%;
-            padding: 5%;
-        }
-
-        /*posições dos blocos  */
-        .top{
-            position: fixed;
-            top: 0;
-        }
-        .bot{
-            position: fixed;
-            bottom:0;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
 
 </head>
 
 <body>
 
-    <div id="menu" style="border: 1px solid blue;">
-        <div class="meio top" style="border: 1px solid red;">
-            <div class="opcao_form">
-                <!-- <div class="display-4" id="opcao_1">Cliente</div> -->
-                <form action="">
-                    <input type="email" name="email" id="email" placeholder="Email" class="form-control">
-                    <input type="password" name="pass" id="pass" placeholder="Senha" class="form-control mt-1">
-                    <button class="btn btn-outline-info btn-block mt-1">Login</button>
-                </form>
-            </div>
+    <div id="menu">
+        <div id="div1" class="meio top">
+            <!-- conteudo -->
+
         </div>
 
-        <div class="meio bot" style="border: 1px solid red;">
-            <div class="opcao_login">
+        <div id="div2" class="meio bot">
+            <div class="opcao_login h-100">
                 <div class="row">
                     <div class="col-6">
-                        <span id="opcao_1" style="letter-spacing: 0.2em;">Cliente</span>
+                        <span id="opcao_1" hidden>Cliente</span>
                     </div>
-                    <div class="col-6 d-flex justify-content-end">
+                    <div class="col-6 d-flex justify-content-end mt-2">
                         <a id="opcao_2" style="letter-spacing: 0.2em;">Fornecedor <i class="fas fa-angle-right"></i></a>
                     </div>
                 </div>
-                <div class="row row-logo">
-                    <div class="justify-content-center align-self-center">
+                <div class="row row-logo d-flex justify-content-center">
+                    <div class="align-self-center">
                         <a href="#">
                             <img src="appcotacao.webp" id="logo" alt="App Cotação - Logo">
                         </a>
@@ -116,51 +52,17 @@
                 </div>
             </div>
         </div>
-
-
     </div>
 
 
-
-    <!-- Scripts Bootstrap -->
-
-    <script src="https://code.jquery.com/jquery-3.5.0.min.js"
-        integrity="sha256-xNzN2a4ltkB44Mc/Jz3pT4iU1cmeR0FkXs4pru/JxaQ=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
 
-    <script>
-        $(document).ready(() => {
-            $('#opcao_2').on('click', function() {
-                let opcoes = $('#opcao_1').text();
-                $('#opcao_1 , #opcao_2').animate({
-                        'opacity':0
-                    },'slow')
-                // let alterou = false
-                $('.meio').toggleClass('top bot', 1000)
 
-                if(opcoes=='Cliente'){
-                    $('#opcao_1').html('Fornecedor')
-                    $('#opcao_2').html('Cliente <i class="fas fa-angle-right">')
-                }else{
-                    $('#opcao_1').html('Cliente')
-                    $('#opcao_2').html('Fornecedor <i class="fas fa-angle-right">')
-                }
-                $('#opcao_1 , #opcao_2').animate({
-                    'opacity':100
-                },'slow')
-
-               
-                
-            })
-        })
-    </script>
 </body>
 
 </html>

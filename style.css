@@ -1,61 +1,85 @@
-
-body,html{
+*{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     margin: 0;
     padding: 0;
     text-decoration: none;
+}
+body,
+html {
     height: 100%;
     width: 100%;
-    background: rgb(138, 78, 173);
+    overflow-x: hidden;
 }
-
-.menu,
-.menu-interno {
+/* página em si */
+#menu {
     height: 100%;
     width: 100%;
-    
 }
-.menu-interno{
-    justify-content: center;
-    align-items: center;
-}
-.card{
-    box-shadow: 0px 0px 100px 0px rgba(0, 0, 0, 0.5);
-}
-.inscricao{
-    font-size: 0.8em;
-}
-label{
-    letter-spacing: 0.5em;
-}
-label.cliente:hover{
-    color: blueviolet;
-}
-label.fornecedor:hover{
-    color: rgb(91, 175, 6);
-}
-
-button{
+.meio {
     width: 100%;
 }
+#div1{
+    height: 65%;
+}
+#div2{
+    height: 35%;
+}
+/* definições de cada bloco */
+.opcao_form{
+    width: 100%;
+    height: 100%;
+    padding: 5%;
+}
+.opcao_login {
+    background: black;
+    color: white;
+}
+.opcao_form{
+    background: white;
+    color: black;
+}
 
-.erroLogin{
-    background-color: rgb(0, 0, 0);
-    text-align: center;
-    color: #FFF;
-    height: 25px;
+/* Estilização do link */
+.opcao_login a{
+    color: white;
+    text-decoration: none;
 }
-.cadastro-success{
-    background-color: rgb(0, 0, 0);
-    text-align: center;
-    color: rgb(30, 206, 30);
-    height: 25px;
-}
-.cadastro-fail{
-    background-color: rgb(0, 0, 0);
-    text-align: center;
-    color: rgb(206, 30, 30);
-    height: 25px;
-}
-a:hover{
+.opcao_login a:hover {
+    color: chartreuse;
     cursor: pointer;
+}
+.div-form a{
+    cursor: pointer;
+    color: rgb(0, 183, 255);
+    text-decoration: none;
+}
+.div-form a:hover{
+    color: rgb(0, 47, 255);
+}
+
+
+/* estilização da logo */
+#logo {
+    width: 85%;
+}
+.row-logo {
+    height: 80%;
+    padding: 5%;
+}
+
+/*posições dos blocos  */
+.top{
+    position: fixed;
+    top: 0;
+}
+.bot{
+    position: fixed;
+    bottom:0;
+}
+#opcao_1{
+    letter-spacing: 0.2em;
+    font-size: large;
+}
+.div-form{
+    width: 100%;
 }

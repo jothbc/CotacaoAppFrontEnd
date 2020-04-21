@@ -1,0 +1,1 @@
+<?php require_once '../app_cotacao/index/cadastro.php'?>

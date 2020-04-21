@@ -1,9 +1,9 @@
 <?php
-session_start();
-if (!isset($_GET['tipo'])) {
-    header("Location: ../index.php");
-}
-$_SESSION['tipo'] = $_GET['tipo'];
+// session_start();
+// if (!isset($_GET['tipo'])) {
+//     header("Location: ../index.php");
+// }
+// $_SESSION['tipo'] = $_GET['tipo'];
 ?>
 
 

@@ -1,0 +1,80 @@
+<div class="opcao_form d-flex justify-content-center" style="overflow-y: auto;">
+    <div class="div-form align-self-center">
+        <a onclick="login_page()"> <i class="fas fa-angle-left"></i> Voltar</a>
+        <h3 id="opcao_3">Cadastro</h3>
+        <form>
+            <input type="email" name="email" id="email" placeholder="Email" class="form-control">
+            <input type="password" name="senha" id="senha" placeholder="Senha" class="form-control mt-1">
+            <input type="password" name="senha2" id="senha2" placeholder="Confirme sua senha" class="form-control mt-1">
+            <input type="tel" name="tel" id="tel" placeholder="Telefone" class="form-control mt-1">
+            <input type="tel" name="tel2" id="tel2" placeholder="Telefone 2 (não obrigatório)"
+                class="form-control mt-1">
+            <input type="number" name="cnpj" id="cnpj" placeholder="CNPJ (somente números)" class="form-control mt-1">
+            <input type="text" name="company_name" id="company_name" placeholder="Empresa" class="form-control mt-1">
+
+            <button class="btn btn-outline-info btn-block mt-1" id="btn-cadastrar">Cadastrar</button>
+        </form>
+    </div>
+</div>
+<script>
+    $('#btn-cadastrar').on('click', e => {
+        e.preventDefault()
+        let email = $('#email').val()
+        let senha = $('#senha').val()
+        let senha2 = $('#senha2').val()
+        let tel = $('#tel').val()
+        let tel2 = $('#tel2').val()
+        let cnpj = $('#cnpj').val()
+        let company_name = $('#company_name').val()
+        let opcao = $('#opcao_1').text().toLowerCase()
+
+        if (senha !== senha2) {
+            $('#senha2, #senha').removeClass('is-valid')
+            $('#senha2').addClass('is-invalid').val('')
+        } else {
+            $('#senha2').removeClass('is-invalid')
+            $('#senha2, #senha').addClass('is-valid')
+        }
+        $.ajax({
+            type: 'post',
+            url: 'cadastro.php',
+            data: ({
+                email, senha, senha2, tel, tel2, cnpj, company_name, opcao
+            }),
+            success: data => {
+                console.log(data)
+                $('#email, #senha, #senha2, #tel, #tel2, #cnpj, #company_name').addClass('is-valid').removeClass('is-invalid')
+
+                if(data == 'success'){
+                    //chamar pagina cadastrado com sucesso
+                    login_page()
+                }
+
+                if(data.includes('emailErro')){
+                    $('#email').addClass('is-invalid')
+                }else if(data.includes('emailDup')){
+                    $('#email').addClass('is-invalid')
+                    $('#email').val('')
+                    $('#email').attr('placeholder','Email já cadastrado')
+                }
+                if(data.includes('senhaMin')){
+                    $('#senha, #senha2').addClass('is-invalid')
+                }else if(data.includes('senhaDif')){
+                    $('#senha2').addClass('is-invalid')
+                }
+                if(data.includes('telMin')){
+                    $('#tel').addClass('is-invalid')
+                }
+                if(data.includes('cnpjMin')){
+                    $('#cnpj').addClass('is-invalid')
+                }
+                if(data.includes('compMin')){
+                    $('#company_name').addClass('is-invalid')
+                }
+            },
+            error: erro => {
+                console.log(erro)
+            }
+        })
+    })
+</script>
