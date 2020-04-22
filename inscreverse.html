@@ -37,7 +37,7 @@
         }
         $.ajax({
             type: 'post',
-            url: 'cadastro.php',
+            url: 'route.php?route=cadastro',
             data: ({
                 email, senha, senha2, tel, tel2, cnpj, company_name, opcao
             }),
@@ -46,8 +46,16 @@
                 $('#email, #senha, #senha2, #tel, #tel2, #cnpj, #company_name').addClass('is-valid').removeClass('is-invalid')
 
                 if(data == 'success'){
-                    //chamar pagina cadastrado com sucesso
-                    login_page()
+                    $.ajax({
+                        type: 'get',
+                        url: 'cadastro_sucesso.html',
+                        success: data=>{
+                            $('#div1').html(data)
+                        },
+                        error: erro=>{
+                            console.log(erro)
+                        }
+                    })
                 }
 
                 if(data.includes('emailErro')){

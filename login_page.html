@@ -18,16 +18,15 @@
         let senha = $('#senha').val()
         $.ajax({
             type: 'post',
-            url: 'login.php',
+            url: 'route.php?route=login',
             data: ({
                 email,
                 senha,
                 opcao
             }),
             success: data => {
-                console.log(data)
                 if(data =='success'){
-                   //ir para a pagina principal do cliente
+                    window.location.href = $('#opcao_1').text()+'/index.php'
                 }else if(data == 'fail'){
                     $('#erro-login').removeAttr('hidden')
                 }

@@ -38,6 +38,9 @@ html {
     background: white;
     color: black;
 }
+.footer{
+    margin-top: -10px;
+}
 
 /* Estilização do link */
 .opcao_login a{

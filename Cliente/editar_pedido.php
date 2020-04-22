@@ -3,6 +3,9 @@ session_start();
 if (!isset($_SESSION['id']) || !isset($_SESSION['company_name'])) {
     header("Location: ../route.php?route=logoff");
 }
+if(!isset($_GET['pedido'])){
+    header("Location: index.php");
+}
 include_once '../../app_cotacao/Connection.php';
 include_once '../../app_cotacao/Model/Model.php';
 include_once '../../app_cotacao/Model/Cliente.php';
@@ -10,6 +13,7 @@ include_once '../../app_cotacao/Model/Cliente.php';
 $cliente = new Cliente();
 $cliente->__set('id',$_SESSION['id']);
 $cliente->__set('company_name',$_SESSION['company_name']);
+$cliente->__set('ultimo_pedido',$_GET['pedido']);
 
 ?>
 
@@ -59,64 +63,52 @@ $cliente->__set('company_name',$_SESSION['company_name']);
 
     <section class="container">
         <div class="row">
-            <div class="col-md-4">
-                <div class="box-perfil mt-4">
-                    <h4 class="perfil-empresa">
-                        Supermercado Correia
-                    </h4>
-                    <div>
-                        <span>
-                            Total de Cotações
-                        </span>
-                        <br>
-                        <span class="perfil-contador ml-5"> 
-                            <?=$cliente->getTotalPedidos()['total']?>
-                        </span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6">
-                <div class="box-cotacoes mt-4">
-                    <button class="btn btn-outline-warning btn-block">Nova Cotação</button>
-                    <table class="table table-dark">
-                        <thead>
-                            <tr>
-                                <td>Cotação</td>
-                                <td>Status</td>
-                                <td>Editar</td>
-                                <td>Remover</td>
+            <div class="col-md-12 box-cotacoes mt-4">
+                <span>Cotação <i class="perfil-contador"><?=$cliente->__get('ultimo_pedido')?></i> </span>
+                <table class="table table-dark">
+                    <thead>
+                        <tr>
+                            <td>Descrição</td>
+                            <td>Remover</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <? foreach($cliente->getItensPedido() as $index=>$item){?>
+                            <tr id="item_<?=$item['id']?>">
+                                <td>
+                                   <?=$item['descricao']?>
+                                </td>
+                                <td onclick="removerItemPedido(<?=$item['id']?>)">
+                                    <i class="far fa-trash-alt"></i>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            
-                            <?php foreach($cliente->getPedidos() as $index=>$pedido){?>
-                                <tr>
-                                    <td>
-                                        <?=$pedido['pedido']?>
-                                    </td>
+                        <?}?>
 
-                                    <td>
-                                        <?=$pedido['descricao']?>
-                                    </td>
-
-                                    <td onclick="editarPedido(<?=$pedido['pedido']?>)" >
-                                        <i class="far fa-edit"></i>
-                                    </td>
-                                    
-                                    <td onclick="removerPedido(<?=$pedido['pedido']?>)">
-                                        <i class="far fa-trash-alt"></i>
-                                    </td>
-                                </tr>
-                            <?php } ?>
-
-                        </tbody>
-
-                    </table>
+                    </tbody>
+                </table>
+                <div class="input-group mt-5">
+                    <input type="text" class="form-control" placeholder="Descrição">
+                    <button class="btn btn-outline-info" type="button">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
+
+                <table class="table table-dark mt-2">
+                    <tbody>
+
+                        <tr>
+                            <td>
+                                Farinha de Trigo Dona Benta 1KG
+                            </td>
+                            <td>
+                                <i class="fas fa-cart-plus"></i>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
             </div>
         </div>
-
     </section>
 
 
