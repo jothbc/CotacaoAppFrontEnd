@@ -23,10 +23,12 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
 
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
+    
     <script src="https://kit.fontawesome.com/170e4c5383.js" crossorigin="anonymous"></script>
 
     <!-- Scripts Jquery -->
@@ -37,7 +39,8 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
     <title>App Cotações - Cliente</title>
     <link rel="stylesheet" href="css/index.style.css">
     <script src="script.js"></script>
-
+    
+  
 </head>
 
 <body>
@@ -72,7 +75,8 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
                             <td>Remover</td>
                         </tr>
                     </thead>
-                    <tbody>
+
+                    <tbody id="tabela-itens">
                         <? foreach($cliente->getItensPedido() as $index=>$item){?>
                             <tr id="item_<?=$item['id']?>">
                                 <td>
@@ -86,25 +90,27 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
 
                     </tbody>
                 </table>
+
                 <div class="input-group mt-5">
-                    <input type="text" class="form-control" placeholder="Descrição">
-                    <button class="btn btn-outline-info" type="button">
+                    <input id="busca-descricao" type="text" class="form-control" placeholder="Descrição">
+                    <button class="btn btn-outline-info" type="button" onclick="buscarProduto()">
                         <i class="fas fa-search"></i>
+                    </button>
+                    <button class="btn btn-outline-danger" type="button" onclick="limparCampos()">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
 
                 <table class="table table-dark mt-2">
-                    <tbody>
-
-                        <tr>
+                    <tbody id="table-busca">
+                        <!-- <tr>
                             <td>
                                 Farinha de Trigo Dona Benta 1KG
                             </td>
                             <td>
                                 <i class="fas fa-cart-plus"></i>
                             </td>
-                        </tr>
-
+                        </tr> -->
                     </tbody>
                 </table>
             </div>
@@ -115,7 +121,13 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
-
+    <script>
+        $('#busca-descricao').on('keypress', function(e){
+            if(e.which == 13){
+                buscarProduto()
+            }
+        })
+    </script>
 </body>
 
 </html>

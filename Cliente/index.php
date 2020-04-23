@@ -78,7 +78,7 @@ $cliente->__set('company_name',$_SESSION['company_name']);
 
             <div class="col-md-6">
                 <div class="box-cotacoes mt-4">
-                    <button class="btn btn-outline-warning btn-block">Nova Cotação</button>
+                    <button class="btn btn-outline-warning btn-block" onclick="novoPedido()"><strong>Nova Cotação</strong></button>
                     <table class="table table-dark">
                         <thead>
                             <tr>
@@ -89,9 +89,8 @@ $cliente->__set('company_name',$_SESSION['company_name']);
                             </tr>
                         </thead>
                         <tbody>
-                            
                             <?php foreach($cliente->getPedidos() as $index=>$pedido){?>
-                                <tr>
+                                <tr id="pedido_<?=$pedido['pedido']?>">
                                     <td>
                                         <?=$pedido['pedido']?>
                                     </td>
@@ -100,10 +99,13 @@ $cliente->__set('company_name',$_SESSION['company_name']);
                                         <?=$pedido['descricao']?>
                                     </td>
 
+                                    <?if($pedido['status'] == 1){?>
                                     <td onclick="editarPedido(<?=$pedido['pedido']?>)" >
                                         <i class="far fa-edit"></i>
                                     </td>
-                                    
+                                    <?}else{?>
+                                        <td></td>
+                                    <?}?>
                                     <td onclick="removerPedido(<?=$pedido['pedido']?>)">
                                         <i class="far fa-trash-alt"></i>
                                     </td>
