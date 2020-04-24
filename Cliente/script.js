@@ -37,6 +37,9 @@ function removerPedido(pedido){
         }
     })
 }
+function visualizarPedido(pedido){
+    window.location.href = 'visualizar_pedido.php?pedido='+pedido;
+}
 function removerItemPedido(index_id_produto){
     $.ajax({
         type: 'post',

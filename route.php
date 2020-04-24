@@ -5,6 +5,10 @@
     require_once '../app_cotacao/Model/Fornecedor.php';
     require_once '../app_cotacao/Model/Produto.php';
 
+    if(!isset($_GET['route'])){
+        die;
+    }
+    
     $route = $_GET['route'];
 
     if($route == 'cadastro'){
@@ -18,6 +22,12 @@
         session_destroy();
         header("Location: index.html");
     }
+
+    // // Controle das rotas abaixo, todas as rotas a baixo tem que estar logado para realizar
+    // if(!isset($_SESSION['id']) || !isset($_SESSION['company_name'])){
+    //     die;
+    // }
+
     if($route == 'removerItemPedido'){
         require_once '../app_cotacao/cliente/removerItemPedido.php';
     }
@@ -32,6 +42,15 @@
     }
     if($route == 'novoPedido'){
         require_once '../app_cotacao/cliente/novoPedido.php';
+    }
+    if($route == 'adicionarCliente'){
+        require_once '../app_cotacao/fornecedor/adicionarCliente.php';
+    }
+    if($route == 'removerCliente'){
+        require_once '../app_cotacao/fornecedor/removerCliente.php';
+    }
+    if($route == 'buscarCotacoesCliente'){
+        require_once '../app_cotacao/fornecedor/buscarCotacoesCliente.php';
     }
 
 

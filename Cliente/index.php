@@ -59,10 +59,11 @@ $cliente->__set('company_name',$_SESSION['company_name']);
 
     <section class="container">
         <div class="row">
+
             <div class="col-md-4">
                 <div class="box-perfil mt-4">
                     <h4 class="perfil-empresa">
-                        Supermercado Correia
+                        <?=$_SESSION['company_name']?>
                     </h4>
                     <div>
                         <span>
@@ -76,7 +77,7 @@ $cliente->__set('company_name',$_SESSION['company_name']);
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-8">
                 <div class="box-cotacoes mt-4">
                     <button class="btn btn-outline-warning btn-block" onclick="novoPedido()"><strong>Nova Cotação</strong></button>
                     <table class="table table-dark">
@@ -91,21 +92,22 @@ $cliente->__set('company_name',$_SESSION['company_name']);
                         <tbody>
                             <?php foreach($cliente->getPedidos() as $index=>$pedido){?>
                                 <tr id="pedido_<?=$pedido['pedido']?>">
-                                    <td>
+                                    <td onclick="visualizarPedido(<?=$pedido['pedido']?>)">
                                         <?=$pedido['pedido']?>
                                     </td>
 
-                                    <td>
+                                    <td onclick="visualizarPedido(<?=$pedido['pedido']?>)">
                                         <?=$pedido['descricao']?>
                                     </td>
 
                                     <?if($pedido['status'] == 1){?>
-                                    <td onclick="editarPedido(<?=$pedido['pedido']?>)" >
-                                        <i class="far fa-edit"></i>
-                                    </td>
+                                        <td onclick="editarPedido(<?=$pedido['pedido']?>)" >
+                                            <i class="far fa-edit"></i>
+                                        </td>
                                     <?}else{?>
                                         <td></td>
                                     <?}?>
+
                                     <td onclick="removerPedido(<?=$pedido['pedido']?>)">
                                         <i class="far fa-trash-alt"></i>
                                     </td>
