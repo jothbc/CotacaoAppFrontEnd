@@ -43,6 +43,18 @@
     if($route == 'novoPedido'){
         require_once '../app_cotacao/cliente/novoPedido.php';
     }
+    if($route == 'inverterStatus'){
+        require_once '../app_cotacao/cliente/inverterStatus.php';
+    }
+    if($route == 'aprovarDesaprovar'){
+        require_once '../app_cotacao/cliente/aprovarDesaprovar.php';
+    }
+    if($route == 'incluirObs'){
+        require_once '../app_cotacao/cliente/incluirObs.php';
+    }
+    if($route == 'getObs'){
+        require_once '../app_cotacao/cliente/getObs.php';
+    }
     if($route == 'adicionarCliente'){
         require_once '../app_cotacao/fornecedor/adicionarCliente.php';
     }
@@ -52,6 +64,9 @@
     if($route == 'buscarCotacoesCliente'){
         require_once '../app_cotacao/fornecedor/buscarCotacoesCliente.php';
     }
-
+    if($route == 'enviarPrecos'){
+        require_once '../app_cotacao/fornecedor/enviarPrecos.php';
+    }
+    
 
 ?>

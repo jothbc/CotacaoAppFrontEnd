@@ -66,10 +66,9 @@ function buscarCotacoes(cliente_id){
             cliente_id
         }),
         success: data=>{
-            console.log(data)
             $('#table-cliente-cotacao').html('')
             data.forEach(element => {
-                let row = `<tr onclick="abrirCotacao(${element['pedido']},cliente_id)">
+                let row = `<tr onclick="abrirCotacao(${element['pedido']},${cliente_id},${element['status']})">
                                 <td>
                                     ${element['pedido']}
                                 </td>
@@ -89,6 +88,43 @@ function buscarCotacoes(cliente_id){
     $('#cliente_company').html('Supermercado correia')
 }
 
-function abrirCotacao(pedido_id,cliente_id){
-    console.log(pedido_id,cliente_id)
+function abrirCotacao(pedido_id,cliente_id,status){
+    if(status=='1'){
+        window.location.href = `cotacao_cliente.php?pedido=${pedido_id}&cliente=${cliente_id}`
+    }else if(status == '0'){
+        window.location.href = `cotacao_cliente_finalizado.php?pedido=${pedido_id}&cliente=${cliente_id}`
+    }
+}
+
+function enviarPrecos(cliente_id,pedido_id){
+    let lista = []
+    $('tbody tr td input').each(function (index,element){
+        let id_produto = this.id
+        let valor = this.value
+        if(valor!=''){
+            lista.push({id_produto,valor})
+        }
+    })
+    $('div.progress').removeAttr('hidden')
+    $.ajax({
+        type: 'post',
+        url: '../route.php?route=enviarPrecos',
+        data: ({lista,
+                cliente_id,
+                pedido_id}),
+        success: data=>{
+            console.log(data)
+            if(data=='success'){
+                $('tbody tr td input').addClass('is-valid')
+            }else{
+                $('tbody tr td input').addClass('is-invalid')
+            }
+            $('div.progress').attr('hidden',true)
+        },
+        error: erro=>{
+            alert(erro)
+            $('div.progress').attr('hidden',true)
+        }
+    })
+
 }

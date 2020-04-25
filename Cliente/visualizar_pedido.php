@@ -60,7 +60,10 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
     </header>
 
     <section class="container mt-4">
-        <span class="text-info"><strong>Cotação</strong> <i class="perfil-contador"><?=$cliente->__get('ultimo_pedido')?></i> </span>
+        <div>
+            <span class="text-info"><strong>Cotação</strong> <i class="perfil-contador"><?=$cliente->__get('ultimo_pedido')?></i> </span>
+            <button id="btn-status" class="ml-4 btn btn-outline-primary" onclick="inverterStatus(<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>)"> <?= $cliente->getStatusPedido()['status'] == 1? 'Fechar': 'Abrir' ?> </button>
+        </div>
         
         <? foreach($cliente->getItensPedido() as $index=>$item){?>
             <div class="row" id="item_<?=$item['id']?>">
@@ -68,7 +71,7 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
 
                     <!-- div descrição do item -->
                     <div class="row">
-                        <div class="col-12 text-info">
+                        <div class="col-12 text-light">
                             <h4>
                                 <?=$item['descricao']?>
                             </h4>
@@ -81,55 +84,47 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
                         <div class="col-12">
                             <div style="position: relative">
                                 <!-- box dos fornecedores -->
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>Muffato</div>
-                                    <div>R$ 12,99</div>
-                                </div>
 
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>Joinvile</div>
-                                    <div>R$ 13,99</div>
-                                </div>
+                                <? foreach($cliente->getValorCotadoParaProduto($item['produto_id']) as $index=> $emp) { ?>
+                                    <div id="ext_forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>"
+                                        class="btn btn-outline-info m-1 box">
+                                    
+                                        <div id="forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>" 
+                                            class="<?=$emp['aprovado']==1?'active':'' ?>" 
+                                            onclick="aprovarDesaprovar(<?=$emp['fornecedor_id']?>,<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>,<?=$item['produto_id']?>)">
+                                            
+                                            <!-- Nome da Empresa -->
+                                            <div>
+                                                <?=$emp['company_name']?>
+                                            </div>
 
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>Muller</div>
-                                    <div>R$ 11,99</div>
-                                </div>
+                                            <!-- Valor -->
+                                            <div>R$ <?=number_format($emp['valor'],2,',','.')?> </div>
+                                        </div>
+                                         <!-- OBS -->
+                                        <?if($emp['aprovado']==1){?>
+                                            <div class="input-group" id="input_forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>">
+                                                <input id="obs_text_forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>" 
+                                                        type="text" 
+                                                        placeholder="Obs" 
+                                                        class="form-control"
+                                                        value = "<?= $emp['obs']!=''?$emp['obs']:'' ?>">
+                                                
+                                                <button class="btn btn-primary"
+                                                        onclick="incluirObs(<?=$emp['fornecedor_id']?>,<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>,<?=$item['produto_id']?>)">
+                                                    <i class="fas fa-arrow-right"></i>
+                                                </button>
+                                            </div>
+                                        <?}?>
+                                        <!-- FIM OBS -->
+                                    </div>
+                                <?}?>
 
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>DEQUECH</div>
-                                    <div>R$ 10,99</div>
-                                </div>
-
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>PARATI</div>
-                                    <div>R$ 9,98</div>
-                                </div>
-
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>DEQUECH</div>
-                                    <div>R$ 10,99</div>
-                                </div>
-
-                                <div class="btn btn-outline-info m-1 box">
-                                    <div>PARATI</div>
-                                    <div>R$ 9,98</div>
-                                </div>
-                               
                             </div>
                         </div>
                     </div>
                     <!-- FIM Fornecedores -->
 
-                    <!-- Ao clicar no fornecedor deve aparecer essa div para informar ao fornecedor as obs do pedido -->
-                    <!-- inicio obs -->
-                    <div class="row mt-2">
-                        <div class="col-12 input-group">
-                            <input type="text" placeholder="Observação: Ex: 1CX de cada sabor" class="form-control">
-                            <button class="btn btn-outline-info"><i class="fas fa-arrow-right"></i></button>
-                        </div>
-                    </div>
-                    <!-- fim obs -->
                 </div>
             </div>
         <?}?>

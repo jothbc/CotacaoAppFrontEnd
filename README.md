@@ -1,5 +1,12 @@
 # CotacaoAppFrontEnd
 
-Para testar em seu computador é necessário os arquivos do backend, disponíveis aqui no meu github.
+App Cotação.
 
-crie uma pasta chamada app_cotacao dentro de htdocs e mova os arquivos para lá.
+Aplicação opensource desenvolvida para cotações em geral.
+
+Arquivos do Front-End
+
+Para roda-lo em seu pc basta baixar todos os arquivos e colar direto dentro de htdocs.
+Ex: C:\xampp\htdocs\index.php
+
+É necessario os arquivos do Back-End também disponíveis aqui no meu git.

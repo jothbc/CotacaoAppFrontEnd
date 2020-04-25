@@ -48,3 +48,19 @@ tbody tr:hover{
     color: rgb(25, 41, 255);
     cursor: pointer;
 }
+.box-aprove{
+    border: 2px solid rgb(4, 211, 97);
+    border-radius: 10px;
+    padding: 5px;
+}
+.box-no-aprove{
+    border: 2px solid rgb(253, 149, 31);
+    border-radius: 10px;
+    padding: 5px;
+}
+.box-aprove:hover{
+    background:rgba(4, 211, 97, 0.5);
+}
+.box-no-aprove:hover{
+    background: rgb(253, 149, 31,0.5);
+}

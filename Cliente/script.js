@@ -126,3 +126,111 @@ function limparCampos(){
     $('#table-busca').html('')
     $('#busca-descricao').val('')
 }
+function inverterStatus(cliente_id,pedido_id){
+    $.ajax({
+        type: 'post',
+        url: '../route.php?route=inverterStatus',
+        data: ({
+            cliente_id,
+            pedido_id
+        }),
+        success: data=>{
+            if(data){
+                $('#btn-status').text($('#btn-status').text() == 'Abrir' ? 'Fechar':'Abrir')
+            }else{
+                alert(data)
+            }
+        },
+        error: erro=>{
+            console.log(erro)
+        }
+    })
+}
+function aprovarDesaprovar(fornecedor_id,cliente_id,pedido_id,produto_id){
+    $.ajax({
+        type: 'post',
+        url: '../route.php?route=aprovarDesaprovar',
+        data: ({
+            fornecedor_id,
+            cliente_id,
+            pedido_id,
+            produto_id
+        }),
+        success: data=>{
+            if(data=='fail'){
+                alert('Algo deu errado.')
+            }
+            if(data){
+                $(`div#forn_${fornecedor_id}_item_${produto_id}`).toggleClass('active')
+
+                let input =  `<div class="input-group" id="input_forn_${fornecedor_id}_item_${produto_id}">
+                                <input id="obs_text_forn_${fornecedor_id}_item_${produto_id}" 
+                                        type="text" 
+                                        placeholder="Obs" 
+                                        class="form-control">
+                                
+                                <button class="btn btn-primary"
+                                        onclick="incluirObs(${fornecedor_id},${cliente_id},${pedido_id},${produto_id})">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>`
+                
+                if($('#forn_'+fornecedor_id+'_item_'+produto_id).hasClass('active')){
+                    $('#ext_forn_'+fornecedor_id+'_item_'+produto_id).append(input)
+                    
+                    $.ajax({
+                        type: 'get',
+                        url: '../route.php?route=getObs',
+                        data: ({
+                            fornecedor_id,
+                            cliente_id,
+                            pedido_id,
+                            produto_id
+                        }),
+                        success: data2=>{
+                            if(data2!='NA'){
+                                $(`#obs_text_forn_${fornecedor_id}_item_${produto_id}`).attr('value',data2)
+                            }
+                        },
+                        error: erro2=>{
+                            console.log(erro2)
+                        }
+                    })
+                }else{
+                    $(`#input_forn_${fornecedor_id}_item_${produto_id}`).remove();
+                }
+                
+            }
+        },
+        error: erro=>{
+            console.log(erro)
+        }
+    })
+}
+
+function incluirObs(fornecedor_id,cliente_id,pedido_id,produto_id){
+    let obs = $('#obs_text_forn_'+fornecedor_id+'_item_'+produto_id).val();
+    $.ajax({
+        type: 'post',
+        url: '../route.php?route=incluirObs',
+        data: ({
+            fornecedor_id,
+            cliente_id,
+            pedido_id,
+            produto_id,
+            obs
+        }),
+        success: data=>{
+            if(data=='fail'){
+                alert('Algo deu errado.')
+                $('#obs_text_forn_'+fornecedor_id+'_item_'+produto_id).addClass('is-invalid')
+            }
+            if(data){
+                $('#obs_text_forn_'+fornecedor_id+'_item_'+produto_id).addClass('is-valid')
+            }
+        },
+        error: erro=>{
+            console.log(erro)
+        }
+    })
+}
