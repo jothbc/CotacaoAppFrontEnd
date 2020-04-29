@@ -3,7 +3,7 @@ session_start();
 if (!isset($_SESSION['id']) || !isset($_SESSION['company_name'])) {
     header("Location: ../route.php?route=logoff");
 }
-if(!isset($_GET['pedido'])){
+if (!isset($_GET['pedido'])) {
     header("Location: index.php");
 }
 include_once '../../app_cotacao/Connection.php';
@@ -11,9 +11,9 @@ include_once '../../app_cotacao/Model/Model.php';
 include_once '../../app_cotacao/Model/Cliente.php';
 
 $cliente = new Cliente();
-$cliente->__set('id',$_SESSION['id']);
-$cliente->__set('company_name',$_SESSION['company_name']);
-$cliente->__set('ultimo_pedido',$_GET['pedido']);
+$cliente->__set('id', $_SESSION['id']);
+$cliente->__set('company_name', $_SESSION['company_name']);
+$cliente->__set('ultimo_pedido', $_GET['pedido']);
 
 ?>
 
@@ -23,10 +23,10 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    
+
     <script src="https://kit.fontawesome.com/170e4c5383.js" crossorigin="anonymous"></script>
 
     <!-- Scripts Jquery -->
@@ -61,20 +61,23 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
 
     <section class="container mt-4">
         <div>
-            <span class="text-info"><strong>Cotação</strong> <i class="perfil-contador"><?=$cliente->__get('ultimo_pedido')?></i> </span>
-            <button id="btn-status" class="ml-4 btn btn-outline-primary" onclick="inverterStatus(<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>)"> <?= $cliente->getStatusPedido()['status'] == 1? 'Fechar': 'Abrir' ?> </button>
+            <span class="text-info"><strong>Cotação</strong> <i class="perfil-contador"><?= $cliente->__get('ultimo_pedido') ?></i> </span>
+            <button id="btn-status" class="ml-4 btn btn-outline-primary" onclick="inverterStatus(<?= $cliente->__get('id') ?>,<?= $cliente->__get('ultimo_pedido') ?>)"><?= $cliente->getStatusPedido()['status'] == 1 ? 'Fechar' : 'Abrir' ?></button>
         </div>
-        
-        <? foreach($cliente->getItensPedido() as $index=>$item){?>
-            <div class="row" id="item_<?=$item['id']?>">
+
+        <? foreach ($cliente->getItensPedido() as $index => $item) { ?>
+            <div class="row" id="item_<?= $item['id'] ?>">
                 <div class="col-md-12 box-cotacoes mt-4">
 
                     <!-- div descrição do item -->
                     <div class="row">
-                        <div class="col-12 text-light">
+                        <div class="col-12 text-dark">
                             <h4>
-                                <?=$item['descricao']?>
+                                <?= $item['descricao'] ?>
                             </h4>
+                            <? if($item['pretencao']!=''){ ?>
+                                <small class="ml-3">Pretenção: <?=$item['pretencao']?></small>
+                            <? } ?>
                         </div>
                     </div>
                     <!-- fim div descricao item -->
@@ -85,40 +88,54 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
                             <div style="position: relative">
                                 <!-- box dos fornecedores -->
 
-                                <? foreach($cliente->getValorCotadoParaProduto($item['produto_id']) as $index=> $emp) { ?>
-                                    <div id="ext_forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>"
-                                        class="btn btn-outline-info m-1 box">
-                                    
-                                        <div id="forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>" 
-                                            class="<?=$emp['aprovado']==1?'active':'' ?>" 
-                                            onclick="aprovarDesaprovar(<?=$emp['fornecedor_id']?>,<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>,<?=$item['produto_id']?>)">
-                                            
+                                <? foreach ($cliente->getValorCotadoParaProduto($item['produto_id']) as $index => $emp) { ?>
+                                    <!-- DIV EXTERIOR ext_forn_[fornecedor_id]_item_[produto_id] -->
+                                    <div id="ext_forn_<?= $emp['fornecedor_id'] ?>_item_<?= $item['produto_id'] ?>" class="m-1 box p-2">
+
+                                        <!-- DIV INTERIOR forn_['fornecedor_id']_item_['produto_id'] -->
+                                        <!-- Class active para itens aprovado -->
+                                        <div id="forn_<?= $emp['fornecedor_id'] ?>_item_<?= $item['produto_id'] ?>" class="<?= $emp['aprovado'] == 1 ? 'active' : '' ?>">
+
                                             <!-- Nome da Empresa -->
-                                            <div>
-                                                <?=$emp['company_name']?>
+                                            <div class="ml-2 text-dark">
+                                                <strong><?= $emp['company_name'] ?></strong>
                                             </div>
 
                                             <!-- Valor -->
-                                            <div>R$ <?=number_format($emp['valor'],2,',','.')?> </div>
-                                        </div>
-                                         <!-- OBS -->
-                                        <?if($emp['aprovado']==1){?>
-                                            <div class="input-group" id="input_forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>">
-                                                <input id="obs_text_forn_<?=$emp['fornecedor_id']?>_item_<?=$item['produto_id']?>" 
-                                                        type="text" 
-                                                        placeholder="Obs" 
-                                                        class="form-control"
-                                                        value = "<?= $emp['obs']!=''?$emp['obs']:'' ?>">
-                                                
-                                                <button class="btn btn-primary"
-                                                        onclick="incluirObs(<?=$emp['fornecedor_id']?>,<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>,<?=$item['produto_id']?>)">
-                                                    <i class="fas fa-arrow-right"></i>
-                                                </button>
+                                            <div class="ml-4 text-dark">
+                                                R$ <?= number_format($emp['valor'], 2, ',', '.') ?>
+                                                <span class="ml-2 text-primary span-link"
+                                                    onclick="aprovarDesaprovar(<?= $emp['fornecedor_id'] ?>,<?= $cliente->__get('id') ?>,<?= $cliente->__get('ultimo_pedido') ?>,<?= $item['produto_id'] ?>)">
+                                                    <?= $emp['aprovado'] == 1 ? 'Reprovar' : 'Aprovar' ?>
+                                                </span>
                                             </div>
-                                        <?}?>
-                                        <!-- FIM OBS -->
+                                        </div>
+                                        <!-- FIM DIV INTERIOR forn_['fornecedor_id']_item_['produto_id'] -->
+
+                                        <!-- DIV OBS -->
+                                        <? if ($emp['aprovado'] == 1) { ?>
+                                            <div class="input-group" 
+                                                id="input_forn_<?= $emp['fornecedor_id'] ?>_item_<?= $item['produto_id'] ?>">
+
+                                                    <input id="obs_text_forn_<?= $emp['fornecedor_id'] ?>_item_<?= $item['produto_id'] ?>" 
+                                                            type="text" 
+                                                            placeholder="Obs" 
+                                                            class="form-control" 
+                                                            value="<?= $emp['obs'] != '' ? $emp['obs'] : '' ?>" 
+                                                            style="height: 20px">
+
+                                                    <div class="pl-2 pr-2 mr-2 bg-primary" 
+                                                        onclick="incluirObs(<?= $emp['fornecedor_id'] ?>,<?= $cliente->__get('id') ?>,<?= $cliente->__get('ultimo_pedido') ?>,<?= $item['produto_id'] ?>)">
+                                                            <i class="fas fa-arrow-right"></i>
+                                                    </div>
+
+                                            </div>
+                                        <? } ?>
+                                        <!-- FIM DIV OBS -->
+
                                     </div>
-                                <?}?>
+                                    <!-- FIM DIV EXTERIOR ext_forn_[fornecedor_id]_item_[produto_id] -->
+                                <? } ?>
 
                             </div>
                         </div>
@@ -127,7 +144,7 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
 
                 </div>
             </div>
-        <?}?>
+        <? } ?>
     </section>
 
 

@@ -72,19 +72,20 @@
                         CNPJ: <?= $info_fornecedor['cnpj'] ?>
                     </small>
                 </div>
+                <div class="box-perfil mt-4">
+                    <h4 class="text-center">Buscar Cliente</h4>
+                    <div class="input-group">
+                        <input class="form-control" type="number" name="cnpj" id="cnpj" placeholder="CNPJ (somente números)">
+                        <button class="btn btn-outline-info" onclick="adicionarCliente()"> <i class="fas fa-plus"></i> </button>
+                    </div>
+                    <small id="noCliente" class="text-danger" hidden>*Cliente não localizado</small>
+                </div>
             </div>
 
             <div class="col-md-8 box-cotacoes mt-4">
-                <div class="input-group">
-                    <input class="form-control" type="number" name="cnpj" id="cnpj" placeholder="CNPJ (somente números)">
-                    <button class="btn btn-outline-info" onclick="adicionarCliente()"> <i class="fas fa-plus"></i> </button>
-
-                </div>
-                <small id="noCliente" class="text-danger" hidden>*Cliente não localizado</small>
-
+                
                 <div class="mt-3">
-
-                    <h4>Clientes <i class="fas fa-chevron-down"></i></h4>
+                    <h4 class="text-primary">Clientes <i class="fas fa-chevron-down"></i></h4>
                     <table class="table table-dark">
                         <tbody id="table-clientes">
                             <? foreach ($fornecedor->getClientes() as $cli) { ?>

@@ -10,6 +10,9 @@ html {
     width: 100%;
     overflow-x: hidden;
 }
+body{
+    background: url('./bg2.png') repeat-y top right;
+}
 /* página em si */
 #menu {
     height: 100%;
@@ -19,10 +22,10 @@ html {
     width: 100%;
 }
 #div1{
-    height: 65%;
+    height: 70%;
 }
 #div2{
-    height: 35%;
+    height: 30%;
 }
 /* definições de cada bloco */
 .opcao_form{
@@ -35,7 +38,7 @@ html {
     color: white;
 }
 .opcao_form{
-    background: white;
+    /* background: white; */
     color: black;
 }
 .footer{
@@ -66,8 +69,9 @@ html {
     width: 85%;
 }
 .row-logo {
-    height: 80%;
-    padding: 5%;
+    margin-top: 0px;
+    height: 60%;
+    padding: 2%;
 }
 
 /*posições dos blocos  */

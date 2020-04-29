@@ -3,30 +3,15 @@
     if (!isset($_SESSION['id']) || !isset($_SESSION['company_name'])) {
         header("Location: ../route.php?route=logoff");
     }
-    if(!isset($_GET['pedido']) || !isset($_GET['cliente'])){
-        header("Location: index.php");
-    }
-
     include_once '../../app_cotacao/Connection.php';
     include_once '../../app_cotacao/Model/Model.php';
     include_once '../../app_cotacao/Model/Fornecedor.php';
-    include_once '../../app_cotacao/Model/Cliente.php';
 
     $fornecedor = new Fornecedor();
     $fornecedor->__set('id', $_SESSION['id']);
     $fornecedor->__set('company_name', $_SESSION['company_name']);
 
-    $cliente = new Cliente();
-    $cliente->__set('id',$_GET['cliente']);
-    $cliente->__set('ultimo_pedido',$_GET['pedido']);
 
-    $status = $cliente->getStatusPedido();
-    if(!isset($status['status'])){
-        header("Location: index.php");
-    }else if($status['status'] == 1){
-        header("Location: index.php");
-    }
-    
 ?>
 
 <!DOCTYPE html>
@@ -51,7 +36,7 @@
 
 </head>
 
-<body style="background: black">
+<body>
 
     <header class="navbar navbar-expand-sm navbar-dark navigation">
         <div class="navbar-brand">
@@ -74,25 +59,68 @@
 
     <section class="container">
         <div class="row">
-            <div class="col-md-12 box-cotacoes mt-4">
-                
-                <h4>Cotação <?=$cliente->__get('ultimo_pedido')?> <i class="fas fa-chevron-down"></i></h4>
-                
-                <? foreach($fornecedor->getItensPedido($cliente->__get('ultimo_pedido'),$cliente->__get('id')) as $index=>$item){ ?>
-                    <div class="mt-2 <?=$item['aprovado']==true?'box-aprove':'box-no-aprove' ?>">
-                        <h5><?=$item['aprovado']==true? $item["descricao"].' <i class="far fa-thumbs-up"></i>':'<strike>'.$item["descricao"].'</strike> <i class="far fa-thumbs-down"></i>' ?></h5>
-                        
-                        R$ <?= number_format($item['valor'], 2, ',', '.')?>
-                        <br>
 
-                        <? if($item['aprovado']==true && $item['obs']!=''){?>
-                            OBS: <?=$item['obs']?>
-                        <?}?>
-                    </div>
-                           
-                <? } ?>
-            
+            <div class="col-md-4">
+                <?php $info_fornecedor = $fornecedor->getInfo(); ?>
+                <div class="box-perfil mt-4">
+                    <h4 class="perfil-empresa justify-content-center d-flex">
+                        <?= $info_fornecedor['company_name'] ?>
+                    </h4>
+                    <small>
+                        Email: <a href=""><?= $info_fornecedor['email'] ?></a>
+                        <br>
+                        CNPJ: <?= $info_fornecedor['cnpj'] ?>
+                    </small>
+                </div>
             </div>
+
+            <div class="col-md-8 box-cotacoes mt-4">
+                <div class="input-group">
+                    <input class="form-control" type="number" name="cnpj" id="cnpj" placeholder="CNPJ (somente números)">
+                    <button class="btn btn-outline-info" onclick="adicionarCliente()"> <i class="fas fa-plus"></i> </button>
+
+                </div>
+                <small id="noCliente" class="text-danger" hidden>*Cliente não localizado</small>
+
+                <div class="mt-3">
+
+                    <h4 class="text-primary">Clientes <i class="fas fa-chevron-down"></i></h4>
+                    <table class="table table-dark">
+                        <tbody id="table-clientes">
+                            <? foreach ($fornecedor->getClientes() as $cli) { ?>
+                                <tr id="cliente_id_<?= $cli['cliente_id'] ?>">
+                                    <td onclick="buscarCotacoes(<?= $cli['cliente_id'] ?>)">
+                                        <?= $cli['company_name'] ?>
+                                    </td>
+                                    <td onclick="buscarCotacoes(<?= $cli['cliente_id'] ?>)">
+                                        CNPJ: <?= $cli['cnpj'] ?>
+                                    </td>
+                                    <td onclick="removerCliente(<?= $cli['cliente_id'] ?>)">
+                                        <i class="far fa-trash-alt"></i>
+                                    </td>
+                                </tr>
+                            <? } ?>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="mt-3" id="cotacoes" hidden>
+                    Cotações <span id="cliente_company"></span> <i class="fas fa-chevron-down"></i>
+                    <table class="table table-dark">
+                        <thead>
+                            <tr>
+                                <td>Pedido</td>
+                                <td>Status</td>
+                            </tr>
+                        </thead>
+                        <tbody id="table-cliente-cotacao">
+                            <!-- conteudo da cotação -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+
         </div>
     </section>
 

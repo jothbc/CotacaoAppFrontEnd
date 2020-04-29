@@ -67,11 +67,12 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
     <section class="container">
         <div class="row">
             <div class="col-md-12 box-cotacoes mt-4">
-                <span>Cotação <i class="perfil-contador"><?=$cliente->__get('ultimo_pedido')?></i> </span>
-                <table class="table table-dark">
+                <span class="text-success">Cotação <i class="perfil-contador"><?=$cliente->__get('ultimo_pedido')?></i></span>
+                <table class="table table-dark rounded">
                     <thead>
                         <tr>
                             <td>Descrição</td>
+                            <td>Pretenção</td>
                             <td>Remover</td>
                         </tr>
                     </thead>
@@ -81,6 +82,12 @@ $cliente->__set('ultimo_pedido',$_GET['pedido']);
                             <tr id="item_<?=$item['id']?>">
                                 <td>
                                    <?=$item['descricao']?>
+                                </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input id="pret_<?=$item['id']?>" class="form-control" type="text" value="<?=$item['pretencao']?>" placeholder="Pretenção">
+                                        <button class="btn btn-primary" onclick="addPretencao(<?=$item['id']?>)"><i class="fas fa-arrow-right"></i></button>
+                                    </div>
                                 </td>
                                 <td onclick="removerItemPedido(<?=$item['id']?>)">
                                     <i class="far fa-trash-alt"></i>

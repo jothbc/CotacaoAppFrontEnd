@@ -77,7 +77,7 @@
         <div class="row">
             <div class="col-md-12 box-cotacoes mt-4">
                 
-                <h4>Cotação <?=$cliente->__get('ultimo_pedido')?> <i class="fas fa-chevron-down"></i></h4>
+                <h4 class="text-success">Cotação <?=$cliente->__get('ultimo_pedido')?> <i class="fas fa-chevron-down"></i></h4>
                 <table class="table table-dark">
                     <thead>
                         <tr>

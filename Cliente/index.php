@@ -10,7 +10,7 @@ include_once '../../app_cotacao/Model/Cliente.php';
 $cliente = new Cliente();
 $cliente->__set('id',$_SESSION['id']);
 $cliente->__set('company_name',$_SESSION['company_name']);
-
+$infos = $cliente->getMinhasInfos();
 ?>
 
 <!DOCTYPE html>
@@ -67,20 +67,25 @@ $cliente->__set('company_name',$_SESSION['company_name']);
                     </h4>
                     <div>
                         <span>
-                            Total de Cotações
+                            Total de Cotações 
                         </span>
-                        <br>
-                        <span class="perfil-contador ml-5"> 
+                        <span class="perfil-contador"> 
                             <?=$cliente->getTotalPedidos()['total']?>
                         </span>
                     </div>
+                    <div>
+                        <small class="text-light">CNPJ: <?=$infos['cnpj']?></small> <br>
+                        <small class="text-light">Email: <a href=""><?=$infos['email']?></a></small> <br>
+                        <small class="text-light">Telefone: <?=$infos['tel']?> - <?=$infos['tel_2']?></small>
+                    </div>
+                    
                 </div>
             </div>
 
             <div class="col-md-8">
                 <div class="box-cotacoes mt-4">
-                    <button class="btn btn-outline-warning btn-block" onclick="novoPedido()"><strong>Nova Cotação</strong></button>
-                    <table class="table table-dark">
+                    <button class="btn btn-outline-warning btn-block text-dark" onclick="novoPedido()"><strong>Nova Cotação</strong></button>
+                    <table class="table table-dark mt-2 rounded">
                         <thead>
                             <tr>
                                 <td>Cotação</td>

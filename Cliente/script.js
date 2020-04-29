@@ -60,6 +60,8 @@ function removerItemPedido(index_id_produto){
     })
 }
 function adicionarItemPedido(id_produto,pedido,descricao){
+
+    $('td#'+id_produto+pedido).html('<i class="fas fa-spinner"></i>')
     $.ajax({
         type: 'post',
         url: '../route.php?route=adicionarItemPedido',
@@ -73,11 +75,18 @@ function adicionarItemPedido(id_produto,pedido,descricao){
                                 <td>
                                     ${descricao}
                                 </td>
+                                <td>
+                                    <div class="input-group">
+                                        <input id="pret_${data}" class="form-control" type="text" value="" placeholder="Pretenção">
+                                        <button class="btn btn-primary" onclick="addPretencao(${data})"><i class="fas fa-arrow-right"></i></button>
+                                    </div>
+                                </td>
                                 <td onclick="removerItemPedido(${data})">
                                     <i class="far fa-trash-alt"></i>
                                 </td>
                             </tr>` 
                 $('#tabela-itens').append(item)
+                $('td#'+id_produto+pedido).html('<i class="fas fa-cart-plus"></i>')
             }else{
                 alert('Algo deu errado, atualize a página e confira se o item foi incluso.')
             }
@@ -105,12 +114,12 @@ function buscarProduto(){
         }),
         success: data=>{
             $('#table-busca').html('')
-           data.forEach(element => {
+            data.forEach(element => {
                 let item = `<tr>
                                 <td>
                                     ${element['descricao']}
                                 </td>
-                                <td onclick="adicionarItemPedido(${element['id']},${pedido}, '${element['descricao']}')">
+                                <td onclick="adicionarItemPedido( ${element['id']} , ${pedido} , '${element['descricao']}' )" id="${element['id']}${pedido}">
                                     <i class="fas fa-cart-plus"></i>
                                 </td>
                             </tr>`
@@ -147,6 +156,12 @@ function inverterStatus(cliente_id,pedido_id){
     })
 }
 function aprovarDesaprovar(fornecedor_id,cliente_id,pedido_id,produto_id){
+    let btn_status = $('#btn-status').text()
+    if(btn_status.trim() == 'Fechar'){
+        inverterStatus(cliente_id,pedido_id)
+        alert('Cotação fechada automáticamente.')
+    }
+
     $.ajax({
         type: 'post',
         url: '../route.php?route=aprovarDesaprovar',
@@ -167,17 +182,17 @@ function aprovarDesaprovar(fornecedor_id,cliente_id,pedido_id,produto_id){
                                 <input id="obs_text_forn_${fornecedor_id}_item_${produto_id}" 
                                         type="text" 
                                         placeholder="Obs" 
-                                        class="form-control">
-                                
-                                <button class="btn btn-primary"
-                                        onclick="incluirObs(${fornecedor_id},${cliente_id},${pedido_id},${produto_id})">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
+                                        class="form-control"
+                                        style="height: 20px">
+                                <div class="pl-2 pr-2 mr-2 bg-primary" 
+                                    onclick="incluirObs(${fornecedor_id},${cliente_id},${pedido_id},${produto_id})">
+                                        <i class="fas fa-arrow-right"></i>
+                                </div>
                             </div>`
                 
                 if($('#forn_'+fornecedor_id+'_item_'+produto_id).hasClass('active')){
                     $('#ext_forn_'+fornecedor_id+'_item_'+produto_id).append(input)
-                    
+                    $('#forn_'+fornecedor_id+'_item_'+produto_id+' div span.span-link').html('Reprovar')
                     $.ajax({
                         type: 'get',
                         url: '../route.php?route=getObs',
@@ -198,8 +213,8 @@ function aprovarDesaprovar(fornecedor_id,cliente_id,pedido_id,produto_id){
                     })
                 }else{
                     $(`#input_forn_${fornecedor_id}_item_${produto_id}`).remove();
+                    $('#forn_'+fornecedor_id+'_item_'+produto_id+' div span.span-link').html('Aprovar')
                 }
-                
             }
         },
         error: erro=>{
@@ -207,7 +222,6 @@ function aprovarDesaprovar(fornecedor_id,cliente_id,pedido_id,produto_id){
         }
     })
 }
-
 function incluirObs(fornecedor_id,cliente_id,pedido_id,produto_id){
     let obs = $('#obs_text_forn_'+fornecedor_id+'_item_'+produto_id).val();
     $.ajax({
@@ -231,6 +245,28 @@ function incluirObs(fornecedor_id,cliente_id,pedido_id,produto_id){
         },
         error: erro=>{
             console.log(erro)
+        }
+    })
+}
+
+function addPretencao(produto_index){
+    let pedido = $('i.perfil-contador').text()
+    let pretencao = $('#pret_'+produto_index).val()
+
+    $.ajax({
+        type: 'post',
+        url: '../route.php?route=addPretencao',
+        data: ({ produto_index, pedido, pretencao }),
+        success: data=>{
+            if(data=='success'){
+                $('#pret_'+produto_index).addClass('is-valid')
+            }else{
+                $('#pret_'+produto_index).addClass('is-invalid')
+            }
+        },
+        error: erro=>{
+            console.log(erro)
+            $('#pret_'+produto_index).addClass('is-invalid')
         }
     })
 }

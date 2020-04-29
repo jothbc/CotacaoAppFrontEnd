@@ -55,6 +55,9 @@
     if($route == 'getObs'){
         require_once '../app_cotacao/cliente/getObs.php';
     }
+    if($route == 'addPretencao'){
+        require_once '../app_cotacao/cliente/addPretencao.php';
+    }
     if($route == 'adicionarCliente'){
         require_once '../app_cotacao/fornecedor/adicionarCliente.php';
     }
