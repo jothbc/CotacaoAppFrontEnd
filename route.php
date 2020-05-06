@@ -78,6 +78,12 @@
     if($route == 'procurarCliente'){
         require_once '../app_cotacao/fornecedor/procurarCliente.php';
     }
+    if($route == 'atualizarPerfilFornecedor'){
+        require_once '../app_cotacao/fornecedor/atualizarPerfil.php';
+    }
+    if($route == 'atualizarSenhaFornecedor'){
+        require_once '../app_cotacao/fornecedor/atualizarSenha.php';
+    }
     
 
 ?>

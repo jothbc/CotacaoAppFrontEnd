@@ -77,8 +77,8 @@ $info_fornecedor = $fornecedor->getInfo();
                         Tel: <?= $info_fornecedor['tel'] ?>
                         <?= $info_fornecedor['tel_2']!=''?'Tel2: '.$info_fornecedor['tel_2']:''?>
                     </small>
-                    <div class="d-flex justify-content-end" onclick="editarPerfil()">
-                        <i class="fas fa-user-edit edit_perfil"></i>
+                    <div class="d-flex justify-content-end">
+                        <a href="perfil.php"><i class="fas fa-user-edit edit_perfil"></i></a>
                     </div>
                 </div>
                 <div class="box-perfil mt-4">
@@ -139,11 +139,32 @@ $info_fornecedor = $fornecedor->getInfo();
 
         </div>
     </section>
-
+    <footer style="position: fixed; bottom: 5px;left: 5px">
+        <? if (isset($_GET['editPerfil'])){
+                if($_GET['editPerfil'] == 'success'){ ?>
+                    <div class="text-success" id="footer-dialog">
+                        Perfil atualizado com sucesso!
+                    </div>
+                <?}
+                else if($_GET['editPerfil'] == 'fail'){?>
+                    <div class="text-danger" id="footer-dialog">
+                        Erro ao tentar atualizar o perfil. Tente mais tarde.
+                    </div>
+                <?}?>
+        <? } ?>
+    </footer>
+    
 
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
+    <script>
+        $(document).ready(
+            setTimeout(() => {
+                $("#footer-dialog").remove();
+            }, 3000)
+        )
+    </script>
 
 </body>
 
