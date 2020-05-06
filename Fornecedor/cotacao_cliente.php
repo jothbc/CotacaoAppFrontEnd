@@ -78,7 +78,7 @@
             <div class="col-md-12 box-cotacoes mt-4">
                 
                 <h4 class="text-success">Cotação <?=$cliente->__get('ultimo_pedido')?> <i class="fas fa-chevron-down"></i></h4>
-                <table class="table table-dark">
+                <table class="table table-dark rounded">
                     <thead>
                         <tr>
                             <td>
@@ -88,9 +88,16 @@
                     </thead>
                     <tbody id="table-clientes">
                         <? foreach($cliente->getItensPedido() as $index=>$item){ ?>
+                            <!-- <?=print_r($item)?> -->
                             <tr>
                                 <td>
                                     <?=$item['descricao']?>
+                                </td>
+                                <td>
+                                    <?if($item['pretencao']!=''){?>
+                                        <small>Pretenção: </small>
+                                        <?=$item['pretencao']?>
+                                    <?}?>
                                 </td>
                                 <td>
                                     <? $valor_cotado = $fornecedor->getValorCotadoParaProduto($item['produto_id'],$cliente->__get('id'),$cliente->__get('ultimo_pedido')); ?>
@@ -102,6 +109,9 @@
                 </table>
                 <div class="mt-4 mr-3 justify-content-end d-flex">
                     <button onclick="enviarPrecos(<?=$cliente->__get('id')?>,<?=$cliente->__get('ultimo_pedido')?>)" class="btn btn-outline-success"> <i class="fas fa-paper-plane"></i> Enviar Preços</button>
+                </div>
+                <div class="redirect justify-content-end d-flex">
+                    <div class="text-info" hidden>Redirecionando em 3 segundos....</div>
                 </div>
                 <div class="progress mt-2" hidden>
                     <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" style="width: 100%;"></div>

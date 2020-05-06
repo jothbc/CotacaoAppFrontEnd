@@ -21,12 +21,9 @@
     $cliente->__set('ultimo_pedido',$_GET['pedido']);
 
     $status = $cliente->getStatusPedido();
-    if(!isset($status['status'])){
-        header("Location: index.php");
-    }else if($status['status'] == 1){
+    if(!isset($status['status']) || $status['status'] == 1){
         header("Location: index.php");
     }
-    
 ?>
 
 <!DOCTYPE html>
@@ -51,8 +48,7 @@
 
 </head>
 
-<body style="background: black">
-
+<body>
     <header class="navbar navbar-expand-sm navbar-dark navigation">
         <div class="navbar-brand">
             <img src="../appcotacao.webp" width="100" alt="">
@@ -74,20 +70,31 @@
 
     <section class="container">
         <div class="row">
-            <div class="col-md-12 box-cotacoes mt-4">
+            <div class="col-md-12 box-cotacoes mt-4 text-dark">
                 
                 <h4>Cotação <?=$cliente->__get('ultimo_pedido')?> <i class="fas fa-chevron-down"></i></h4>
                 
                 <? foreach($fornecedor->getItensPedido($cliente->__get('ultimo_pedido'),$cliente->__get('id')) as $index=>$item){ ?>
+                    
                     <div class="mt-2 <?=$item['aprovado']==true?'box-aprove':'box-no-aprove' ?>">
-                        <h5><?=$item['aprovado']==true? $item["descricao"].' <i class="far fa-thumbs-up"></i>':'<strike>'.$item["descricao"].'</strike> <i class="far fa-thumbs-down"></i>' ?></h5>
-                        
-                        R$ <?= number_format($item['valor'], 2, ',', '.')?>
-                        <br>
+                        <div class="d-flex">
+                            <div class="ml-2 mr-2">
+                                <?=$item['aprovado']==true? '<i class="far fa-check-circle"></i>':'<i class="far fa-times-circle"></i>' ?>
+                            </div>
+                            <div>
+                                <h5>
+                                    <?=$item["descricao"]?>
+                                </h5>
+                                
+                                R$ <?= number_format($item['valor'], 2, ',', '.')?>
+                                <br>
 
-                        <? if($item['aprovado']==true && $item['obs']!=''){?>
-                            OBS: <?=$item['obs']?>
-                        <?}?>
+                                <? if($item['aprovado']==true && $item['obs']!=''){?>
+                                    OBS: <?=$item['obs']?>
+                                <?}?>
+                            </div>
+                        </div>
+                        
                     </div>
                            
                 <? } ?>

@@ -13,18 +13,23 @@
 
     if($route == 'cadastro'){
         require_once '../app_cotacao/index/cadastro.php';
+        die;
     }
     if($route == 'login'){
         require_once '../app_cotacao/index/login.php';
+        die;
     }
     if($route == 'logoff'){
         session_start();
         session_destroy();
         header("Location: index.html");
+        die;
     }
 
     // // Controle das rotas abaixo, todas as rotas a baixo tem que estar logado para realizar
     // if(!isset($_SESSION['id']) || !isset($_SESSION['company_name'])){
+    //     session_destroy();
+    //     header("Location: index.html");
     //     die;
     // }
 
@@ -69,6 +74,9 @@
     }
     if($route == 'enviarPrecos'){
         require_once '../app_cotacao/fornecedor/enviarPrecos.php';
+    }
+    if($route == 'procurarCliente'){
+        require_once '../app_cotacao/fornecedor/procurarCliente.php';
     }
     
 

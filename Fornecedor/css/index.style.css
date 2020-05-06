@@ -19,7 +19,7 @@ body{
     background: rgb(0, 0, 0);
     color: rgb(255, 255, 255);
     width: 100%;
-    min-height:100px;
+    /* min-height:50px; */
     border: 2px solid rgb(46, 46, 46);
     border-radius: 10px;
     padding: 5px;
@@ -49,19 +49,25 @@ tbody tr:hover{
     color: rgb(25, 41, 255);
     cursor: pointer;
 }
+#table-clientes tr:hover,
+#table-cliente-cotacao tr:hover{
+    color: rgba(4, 211, 97, 0.5);
+    cursor: pointer;
+}
 .box-aprove{
+    background: rgba(4, 211, 97, 0.5);
     border: 2px solid rgb(4, 211, 97);
     border-radius: 10px;
     padding: 5px;
 }
 .box-no-aprove{
+    background: rgb(253, 149, 31,0.5);
     border: 2px solid rgb(253, 149, 31);
     border-radius: 10px;
     padding: 5px;
 }
-.box-aprove:hover{
-    background:rgba(4, 211, 97, 0.5);
+.edit_perfil:hover,
+.add_cliente:hover{
+    color: rgb(253, 149, 31,0.5);
 }
-.box-no-aprove:hover{
-    background: rgb(253, 149, 31,0.5);
-}
+
