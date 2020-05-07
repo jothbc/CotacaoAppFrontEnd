@@ -30,7 +30,10 @@ body{
     transition: all 0.5s;
     border: 2px solid rgb(253, 149, 31);
 }
-
+.edit_perfil:hover{
+    transition: all 0.5s;
+    color: rgb(253, 149, 31);
+}
 .perfil-empresa{
     letter-spacing: 0.1em;
     padding: 5px;
@@ -39,7 +42,6 @@ body{
     /* color: aqua; */
     font-size: large;
 }
-
 /* Box cotações */
 .box-cotacoes{
     width: 100%;

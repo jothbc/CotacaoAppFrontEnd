@@ -24,6 +24,23 @@
     if(!isset($status['status']) || $status['status'] == 1){
         header("Location: index.php");
     }
+
+    $lista_total = $fornecedor->getItensPedido($cliente->__get('ultimo_pedido'),$cliente->__get('id'));
+    $aprovados = [];
+    $desaprovados = [];
+    foreach ($lista_total as $key => $value) {
+        if($value['aprovado']){
+            $aprovados[] = $value;
+        }else{
+            $desaprovados[] = $value;
+        }
+    }
+    // echo '<pre>';
+    // print_r($aprovados);
+    // echo '</pre>';
+    // echo '<pre>';
+    // print_r($desaprovados);
+    // echo '</pre>';
 ?>
 
 <!DOCTYPE html>
@@ -72,33 +89,64 @@
         <div class="row">
             <div class="col-md-12 box-cotacoes mt-4 text-dark">
                 
-                <h4>Cotação <?=$cliente->__get('ultimo_pedido')?> <i class="fas fa-chevron-down"></i></h4>
-                
-                <? foreach($fornecedor->getItensPedido($cliente->__get('ultimo_pedido'),$cliente->__get('id')) as $index=>$item){ ?>
-                    
-                    <div class="mt-2 <?=$item['aprovado']==true?'box-aprove':'box-no-aprove' ?>">
-                        <div class="d-flex">
-                            <div class="ml-2 mr-2">
-                                <?=$item['aprovado']==true? '<i class="far fa-check-circle"></i>':'<i class="far fa-times-circle"></i>' ?>
-                            </div>
-                            <div>
-                                <h5>
-                                    <?=$item["descricao"]?>
-                                </h5>
-                                
-                                R$ <?= number_format($item['valor'], 2, ',', '.')?>
-                                <br>
+                <h4>Cotação <?=$cliente->__get('ultimo_pedido')?></h4>
 
-                                <? if($item['aprovado']==true && $item['obs']!=''){?>
-                                    OBS: <?=$item['obs']?>
-                                <?}?>
+                <button class="btn btn-outline-success mt-2" data-target="#aprovados" data-toggle="collapse">
+                    Aprovados <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="collapse show" id="aprovados">
+                   <? foreach($aprovados as $index=>$item){ ?>
+                        <div class="mt-2 <?=$item['aprovado']==true?'box-aprove':'box-no-aprove' ?>">
+                            <div class="d-flex">
+                                <div class="ml-2 mr-2 display-4">
+                                    <?=$item['aprovado']==true? '<i class="far fa-check-circle"></i>':'<i class="far fa-times-circle"></i>' ?>
+                                </div>
+                                <div>
+                                    <h5>
+                                        <?=$item["descricao"]?>
+                                    </h5>
+                                    
+                                    R$ <?= number_format($item['valor'], 2, ',', '.')?>
+                                    <br>
+                                    
+                                    <? if($item['aprovado']==true && $item['obs']!=''){?>
+                                        OBS: <?=$item['obs']?>
+                                        <?}?>
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    <? } ?>
+                </div>
+
+                <button class="btn btn-outline-danger mt-2" data-target="#desaprovados" data-toggle="collapse">
+                    Desaprovados <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="collapse" id="desaprovados">
+                   <? foreach($desaprovados as $index=>$item){ ?>
+                        <div class="mt-2 <?=$item['aprovado']==true?'box-aprove':'box-no-aprove' ?>">
+                            <div class="d-flex">
+                                <div class="ml-2 mr-2 display-4">
+                                    <?=$item['aprovado']==true? '<i class="far fa-check-circle"></i>':'<i class="far fa-times-circle"></i>' ?>
+                                </div>
+                                <div>
+                                    <h5>
+                                        <?=$item["descricao"]?>
+                                    </h5>
+                                    
+                                    R$ <?= number_format($item['valor'], 2, ',', '.')?>
+                                    <br>
+                                    
+                                    <? if($item['aprovado']==true && $item['obs']!=''){?>
+                                        OBS: <?=$item['obs']?>
+                                        <?}?>
+                                </div>
                             </div>
                         </div>
-                        
-                    </div>
-                           
-                <? } ?>
-            
+                    <? } ?>
+                </div>
+
             </div>
         </div>
     </section>

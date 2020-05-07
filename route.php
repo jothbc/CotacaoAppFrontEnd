@@ -63,6 +63,15 @@
     if($route == 'addPretencao'){
         require_once '../app_cotacao/cliente/addPretencao.php';
     }
+    if($route == 'atualizarPerfilCliente'){
+        require_once '../app_cotacao/cliente/atualizarPerfil.php';
+    }
+    if($route == 'atualizarSenhaCliente'){
+        require_once '../app_cotacao/cliente/atualizarSenha.php';
+    }
+
+
+
     if($route == 'adicionarCliente'){
         require_once '../app_cotacao/fornecedor/adicionarCliente.php';
     }
