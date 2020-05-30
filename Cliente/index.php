@@ -3,9 +3,9 @@ session_start();
 if (!isset($_SESSION['id']) || !isset($_SESSION['company_name'])) {
     header("Location: ../route.php?route=logoff");
 }
-include_once '../../app_cotacao/Connection.php';
-include_once '../../app_cotacao/Model/Model.php';
-include_once '../../app_cotacao/Model/Cliente.php';
+require_once '../../app_cotacao/Connection.php';
+require_once '../../app_cotacao/Model/Model.php';
+require_once '../../app_cotacao/Model/Cliente.php';
 
 $cliente = new Cliente();
 $cliente->__set('id',$_SESSION['id']);
@@ -134,12 +134,12 @@ $infos = $cliente->getMinhasInfos();
         <? if (isset($_GET['editPerfil'])){
                 if($_GET['editPerfil'] == 'success'){ ?>
                     <div class="text-success" id="footer-dialog">
-                        Perfil atualizado com sucesso!
+                        <span>Perfil atualizado com sucesso!</span>
                     </div>
                 <?}
                 else if($_GET['editPerfil'] == 'fail'){?>
                     <div class="text-danger" id="footer-dialog">
-                        Erro ao tentar atualizar o perfil. Tente mais tarde.
+                        <span>Erro ao tentar atualizar o perfil. Tente mais tarde.</span>
                     </div>
                 <?}?>
         <? } ?>
